@@ -1,0 +1,18 @@
+.homeCardBg {
+  position: absolute;
+  inset: 0;
+  min-width: 100%;
+  min-height: 100%;
+
+  z-index: 0;
+}
+.color-2 {
+  color: var(--mantine-color-text2-0);
+}
+.car-card-link {
+  text-decoration: none;
+}
+.car-card-link:hover div:first-child {
+  color: var(--mantine-color-blue-5);
+  text-decoration: underline;
+}
