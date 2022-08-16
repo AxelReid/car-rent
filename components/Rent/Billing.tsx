@@ -1,15 +1,10 @@
-import {
-  Box,
-  Button,
-  Card,
-  Grid,
-  Group,
-  NumberInput,
-  Text,
-  TextInput,
-} from '@mantine/core'
+import { Box, Card, Grid, NumberInput, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { NextPrevBtnProps, StepContent } from 'types/rental.dto'
+import {
+  BillingFormType,
+  NextPrevBtnProps,
+  StepContent,
+} from 'types/rental.dto'
 import useInputStyles from 'styles/useInputStyles'
 import ActionsBtns from './ActionsBtns'
 
@@ -17,19 +12,19 @@ const Billing = ({
   header,
   form,
   nextStep,
-}: StepContent & Omit<NextPrevBtnProps, 'prevStep'>) => {
+}: StepContent<BillingFormType> & Omit<NextPrevBtnProps, 'prevStep'>) => {
   const { classes } = useInputStyles()
 
   const submit = () => {
-    nextStep()
+    const { hasErrors } = form.validate()
+    if (!hasErrors) nextStep()
   }
-
   return (
     <Card radius='lg' p='xl'>
       {header}
-      <Box my='xl'>
-        <form onSubmit={form.onSubmit(console.log)}>
-          <Grid gutter={30}>
+      <Box mt='xl'>
+        <form onSubmit={form.onSubmit(submit)}>
+          <Grid gutter={30} mb='xl'>
             <Grid.Col span={12} sm={6} md={12} lg={6}>
               <TextInput
                 size='md'
@@ -71,9 +66,12 @@ const Billing = ({
               />
             </Grid.Col>
           </Grid>
+          <ActionsBtns
+            disabled={Object.values(form.values).indexOf('') !== -1}
+            submit={submit}
+          />
         </form>
       </Box>
-      <ActionsBtns disabled={false} submit={submit} />
     </Card>
   )
 }

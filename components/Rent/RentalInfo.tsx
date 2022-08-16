@@ -35,102 +35,78 @@ const useStyles = createStyles((theme, _params) => ({
   },
 }))
 
-interface FormType {
-  form: {
-    state: RentalInfoFormType
-    setState: (statePartial: Partial<RentalInfoFormType>) => void
-  }
-}
-type handleFuncFieldType =
-  | 'address_from'
-  | 'address_to'
-  | 'time_from'
-  | 'time_to'
-
 const Rental = ({
   header,
   form,
   nextStep,
   prevStep,
-}: Omit<StepContent, 'form'> & FormType & NextPrevBtnProps) => {
-  const { state, setState } = form
-
-  const handleDate = (values: [Date, Date]) => {
-    setState({ date_from: values[0], date_to: values[1] })
-  }
-  function handleIt(field: handleFuncFieldType, value: any) {
-    setState({ [field]: value })
-  }
-
+}: StepContent<RentalInfoFormType> & NextPrevBtnProps) => {
   const submit = () => {
-    nextStep()
+    const { hasErrors } = form.validate()
+    if (!hasErrors) nextStep()
+  }
+
+  const handleDate = (value: [Date, Date]) => {
+    form.setValues({ ...form.values, date_from: value[0], date_to: value[1] })
   }
 
   return (
     <Card radius='lg' p='xl'>
       {header}
-      <Box my='xl'>
-        <Group align='start' spacing='xl'>
-          <RangeCalendar
-            value={[state.date_from, state.date_to]}
-            onChange={handleDate}
-            excludeDate={(date) => date.getTime() < new Date().getTime()}
-          />
-          <Stack style={{ flex: 1, minWidth: 350 }} spacing={35}>
-            <RentalAddress
-              handleIt={handleIt}
-              fields={{ address: 'address_from', time: 'time_from' }}
-              values={{
-                address: state.address_from,
-                time: state.time_from,
-                date: state.date_from,
-              }}
-              title='Pick-Up'
-              date={state.date_from}
+      <form onSubmit={form.onSubmit(submit)}>
+        <Box my='xl'>
+          <Group align='start' spacing='xl'>
+            <RangeCalendar
+              value={[form.values.date_from, form.values.date_to]}
+              onChange={handleDate}
+              excludeDate={(date) => date.getTime() < new Date().getTime()}
             />
-            <RentalAddress
-              handleIt={handleIt}
-              fields={{ address: 'address_to', time: 'time_to' }}
-              values={{
-                address: state.address_to,
-                time: state.time_to,
-                date: state.date_to,
-              }}
-              title='Drop-Off'
-              date={state.date_to}
-            />
-          </Stack>
-        </Group>
-      </Box>
-      <ActionsBtns disabled={false} submit={submit} prevStep={prevStep} />
+            <Stack style={{ flex: 1, minWidth: 350 }} spacing={35}>
+              <RentalAddress
+                title='Pick-Up'
+                form={form}
+                fields={{
+                  address: 'address_from',
+                  time: 'time_from',
+                  date: 'date_from',
+                }}
+              />
+              <RentalAddress
+                title='Drop-Off'
+                form={form}
+                fields={{
+                  address: 'address_to',
+                  time: 'time_to',
+                  date: 'date_to',
+                }}
+              />
+            </Stack>
+          </Group>
+        </Box>
+        <ActionsBtns
+          disabled={Object.values(form.values).indexOf('' || null) !== -1}
+          submit={submit}
+          prevStep={prevStep}
+        />
+      </form>
     </Card>
   )
 }
 
 interface RentalAddressTypes {
-  date: Date | null
   title: 'Pick-Up' | 'Drop-Off'
-  handleIt: <T>(field: handleFuncFieldType, value: T | null) => void
   fields: {
     time: 'time_from' | 'time_to'
     address: 'address_from' | 'address_to'
-  }
-}
-interface ValuesType {
-  values: {
-    address: string | null
-    time: any
-    date: Date | null
+    date: 'date_from' | 'date_to'
   }
 }
 
 const RentalAddress = ({
-  date,
   fields,
-  values,
   title,
-  handleIt,
-}: RentalAddressTypes & ValuesType) => {
+  form,
+}: RentalAddressTypes & Omit<StepContent<RentalInfoFormType>, 'header'>) => {
   const { classes } = useStyles()
   const { classes: cls } = useInputStyles()
 
@@ -164,18 +140,34 @@ const RentalAddress = ({
           { value: 'tashkent', label: 'Tashkent' },
         ]}
         nothingFound='No options'
-        onChange={(value) => handleIt(fields.address, value)}
-        value={values.address}
+        {...form.getInputProps(fields.address)}
       />
       <Grid mt='sm'>
         <Grid.Col span={6}>
           <TextInput
             icon={<CalendarIcon width={20} />}
-            value={date ? new Date(date).toDateString() : ''}
             variant='filled'
             size='md'
             label={<Text className={cls.label}>Date</Text>}
             classNames={{ input: cls.input }}
+            error={
+              fields.date === 'date_from'
+                ? form.values.date_from
+                  ? null
+                  : form.errors?.date_from
+                : form.values.date_to
+                ? null
+                : form.errors?.date_to
+            }
+            value={
+              fields.date === 'date_from'
+                ? form.values.date_from
+                  ? new Date(form.values.date_from).toDateString()
+                  : ''
+                : form.values.date_to
+                ? new Date(form.values.date_to).toDateString()
+                : ''
+            }
             readOnly
           />
         </Grid.Col>
@@ -187,8 +179,7 @@ const RentalAddress = ({
             size='md'
             label={<Text className={cls.label}>Time</Text>}
             classNames={{ input: cls.input }}
-            onChange={(value) => handleIt(fields.time, value)}
-            value={values.time}
+            {...form.getInputProps(fields.time)}
           />
         </Grid.Col>
       </Grid>

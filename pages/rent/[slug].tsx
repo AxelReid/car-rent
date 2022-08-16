@@ -15,8 +15,7 @@ const BoxTitle = dynamic(() => import('components/Rent/BoxTitle'))
 
 const CarRent = () => {
   const [currentStep, setCurrentStep] = useState(0)
-  const { billingForm, rentalInfoForm, payment, confirmation } =
-    useRentalForms()
+  const { billingForm, rentalForm, payment, confirmation } = useRentalForms()
 
   const steps = [
     {
@@ -35,7 +34,7 @@ const CarRent = () => {
       desc: 'Please select your rental date',
       render: (header: React.ReactNode) => (
         <RentalInfo
-          form={rentalInfoForm}
+          form={rentalForm}
           header={header}
           nextStep={() => setCurrentStep(2)}
           prevStep={() => setCurrentStep(0)}

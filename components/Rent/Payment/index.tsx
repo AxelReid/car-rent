@@ -1,7 +1,13 @@
-import { Accordion, Card, Group, Radio, Stack, Text } from '@mantine/core'
-import React, { useState } from 'react'
+import { Accordion, Box, Card, Group, Radio, Stack, Text } from '@mantine/core'
+import { UseFormReturnType } from '@mantine/form'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import useGlobalStyles from 'styles/useGlobalStyles'
-import { NextPrevBtnProps, StepContent } from 'types/rental.dto'
+import {
+  CreditCardFormType,
+  NextPrevBtnProps,
+  PaypalFormType,
+  StepContent,
+} from 'types/rental.dto'
 import ActionsBtns from '../ActionsBtns'
 import CreditCard from './CreditCard'
 import PayPal from './PayPal'
@@ -21,12 +27,21 @@ const panels = [
   },
 ]
 
+interface FormType {
+  form: {
+    creditCard: UseFormReturnType<CreditCardFormType>
+    paypal: UseFormReturnType<PaypalFormType>
+    tab: string | null
+    setTab: Dispatch<SetStateAction<string | null>>
+  }
+}
+
 const Payment = ({
   header,
   form,
   prevStep,
   nextStep,
-}: StepContent & NextPrevBtnProps) => {
+}: Omit<StepContent<null>, 'form'> & NextPrevBtnProps & FormType) => {
   const { classes, cx } = useGlobalStyles()
   const [activeTab, setActiveTab] = useState<string | null>(
     form.tab || panels[0].key
@@ -51,39 +66,33 @@ const Payment = ({
     <Card radius='lg' p='xl'>
       {header}
       <Stack my='xl' spacing='lg'>
-        <Accordion
-          radius={12}
-          variant='separated'
-          chevronPosition='right'
-          chevron={null}
-          value={activeTab}
-          onChange={(val) => handleActiveTab(val)}
-        >
-          {panels.map((panel) => (
-            <Accordion.Item
-              px='sm'
-              py={4}
-              className={cx(classes.boxBg, classes.boxBg_active)}
-              key={panel.key}
-              value={panel.key}
-            >
-              <Accordion.Control>
-                <Group>
-                  <Radio
-                    value={panel.key}
-                    checked={panel.key === activeTab}
-                    readOnly
-                  />
-                  <Text weight={600} size='md'>
-                    {panel.label}
-                  </Text>
-                </Group>
-              </Accordion.Control>
-              <Accordion.Panel>{content[panel.key]}</Accordion.Panel>
-            </Accordion.Item>
-          ))}
-        </Accordion>
+        {panels.map((panel) => (
+          <Card
+            key={panel.key}
+            radius={12}
+            px='sm'
+            py={4}
+            className={cx(classes.boxBg)}
+          >
+            <Group p='md' onClick={() => handleActiveTab(panel.key)}>
+              <Radio
+                value={panel.key}
+                checked={panel.key === activeTab}
+                readOnly
+              />
+              <Text weight={600} size='md'>
+                {panel.label}
+              </Text>
+            </Group>
+            {activeTab === panel.key && (
+              <Box p='md' pt={4}>
+                {content[panel.key]}
+              </Box>
+            )}
+          </Card>
+        ))}
       </Stack>
+
       <ActionsBtns disabled={false} prevStep={prevStep} submit={submit} />
     </Card>
   )

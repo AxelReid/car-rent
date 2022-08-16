@@ -1,13 +1,13 @@
 import { Grid, NumberInput, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import useInputStyles from 'styles/useInputStyles'
+import { CreditCardFormType, StepContent } from 'types/rental.dto'
 
-interface Props {
-  form: any
-}
-
-const CreditCard = ({ form }: Props) => {
+const CreditCard = ({
+  form,
+}: Omit<StepContent<CreditCardFormType>, 'header'>) => {
   const { classes, cx } = useInputStyles()
+
   return (
     <>
       <form onSubmit={form.onSubmit(console.log)}>

@@ -30,7 +30,7 @@ const Confirmation = ({
   header,
   form,
   prevStep,
-}: Omit<StepContent, 'form'> &
+}: Omit<StepContent<undefined>, 'form'> &
   FormType &
   Omit<NextPrevBtnProps, 'nextStep'>) => {
   const theme = useMantineTheme()
@@ -57,7 +57,7 @@ const Confirmation = ({
             <Button variant='default' size='lg' radius='md' onClick={prevStep}>
               Back
             </Button>
-            <Button size='lg' radius='md'>
+            <Button size='lg' radius='md' disabled={!state.terms}>
               Rent Now
             </Button>
           </Group>

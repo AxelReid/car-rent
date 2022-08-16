@@ -1,7 +1,11 @@
 import { Button, Group } from '@mantine/core'
 import React from 'react'
 
-type Props = { submit?: () => void; prevStep?: () => void; disabled: boolean }
+type Props = {
+  submit?: (any?: any) => void
+  prevStep?: () => void
+  disabled: boolean
+}
 
 const ActionsBtns = ({ prevStep, submit, disabled = false }: Props) => {
   const is_prev = typeof prevStep === 'function'

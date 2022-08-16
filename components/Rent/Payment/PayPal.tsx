@@ -1,12 +1,9 @@
-import { Grid, NumberInput, Text, TextInput } from '@mantine/core'
+import { Grid, NumberInput, Text } from '@mantine/core'
 import React from 'react'
 import useInputStyles from 'styles/useInputStyles'
+import { PaypalFormType, StepContent } from 'types/rental.dto'
 
-interface Props {
-  form: any
-}
-
-const PayPal = ({ form }: Props) => {
+const PayPal = ({ form }: Omit<StepContent<PaypalFormType>, 'header'>) => {
   const { classes, cx } = useInputStyles()
   return (
     <>
