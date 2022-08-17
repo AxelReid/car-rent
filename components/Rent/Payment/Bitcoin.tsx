@@ -1,5 +1,5 @@
 import { InformationCircleIcon } from '@heroicons/react/outline'
-import { Box, Input, Text, TextInput, Tooltip } from '@mantine/core'
+import { Text, TextInput, Tooltip } from '@mantine/core'
 import React from 'react'
 import useInputStyles from 'styles/useInputStyles'
 import { BitcoinFormType, StepContent } from 'types/rental.dto'
@@ -7,7 +7,7 @@ import { BitcoinFormType, StepContent } from 'types/rental.dto'
 const Bitcoin = ({ form }: Omit<StepContent<BitcoinFormType>, 'header'>) => {
   const { classes, cx } = useInputStyles()
   return (
-    <Input
+    <TextInput
       size='md'
       label={<Text className={classes.label}>Bitcoin Address</Text>}
       placeholder='Bitcoin address'
