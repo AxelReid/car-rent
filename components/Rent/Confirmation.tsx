@@ -12,7 +12,7 @@ import {
 } from '@mantine/core'
 import React from 'react'
 import useGlobalStyles from 'styles/useGlobalStyles'
-import { NextPrevBtnProps, StepContent } from 'types/rental.dto'
+import { FinalFormType, NextPrevBtnProps, StepContent } from 'types/rental.dto'
 import BoxTitle from './BoxTitle'
 
 interface StateType {
@@ -24,17 +24,23 @@ interface FormType {
     state: StateType
     setConfirm: (statePartial: Partial<StateType>) => void
   }
+  finalForm: FinalFormType
 }
 
 const Confirmation = ({
   header,
   form,
+  finalForm,
   prevStep,
 }: Omit<StepContent<undefined>, 'form'> &
   FormType &
   Omit<NextPrevBtnProps, 'nextStep'>) => {
   const theme = useMantineTheme()
   const { state, setConfirm } = form
+
+  const confirmRental = () => {
+    console.log(finalForm)
+  }
 
   return (
     <Card radius='lg' p='xl'>
@@ -57,7 +63,12 @@ const Confirmation = ({
             <Button variant='default' size='lg' radius='md' onClick={prevStep}>
               Back
             </Button>
-            <Button size='lg' radius='md' disabled={!state.terms}>
+            <Button
+              size='lg'
+              radius='md'
+              disabled={!state.terms}
+              onClick={confirmRental}
+            >
               Rent Now
             </Button>
           </Group>

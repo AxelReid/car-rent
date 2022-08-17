@@ -21,6 +21,7 @@ const RentalCar = memo(() => {
           width={250}
           height={140}
           objectFit='contain'
+          alt='car'
         />
         <Box mb='md'>
           <Text size={32} weight='bold'>

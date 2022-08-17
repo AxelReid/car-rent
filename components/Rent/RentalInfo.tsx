@@ -84,7 +84,7 @@ const Rental = ({
           </Group>
         </Box>
         <ActionsBtns
-          disabled={Object.values(form.values).indexOf('' || null) !== -1}
+          disabled={Object.values(form.values).findIndex((val) => !val) !== -1}
           submit={submit}
           prevStep={prevStep}
         />

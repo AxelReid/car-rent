@@ -6,6 +6,15 @@ import MyComp from 'containers/MyComp'
 import useRentalForms from 'hooks/useRentalForms'
 import MyFooter from 'layouts/MyFooter'
 import MyHeader from 'layouts/MyHeader'
+import {
+  BillingFormType,
+  BitcoinFormType,
+  CreditCardFormType,
+  FinalFormType,
+  PaymentTabValue,
+  PaypalFormType,
+  RentalInfoFormType,
+} from 'types/rental.dto'
 
 const Billing = dynamic(() => import('components/Rent/Billing'))
 const RentalInfo = dynamic(() => import('components/Rent/RentalInfo'))
@@ -17,6 +26,12 @@ const CarRent = () => {
   const [currentStep, setCurrentStep] = useState(0)
   const { billingForm, rentalForm, payment, confirmation } = useRentalForms()
 
+  const finalForm: FinalFormType = {
+    billing: billingForm.values,
+    rentalInfo: rentalForm.values,
+    payment: payment[payment.tab].values,
+    paymentType: payment.tab,
+  }
   const steps = [
     {
       title: 'Billing Info',
@@ -61,6 +76,7 @@ const CarRent = () => {
           form={confirmation}
           header={header}
           prevStep={() => setCurrentStep(2)}
+          finalForm={finalForm}
         />
       ),
     },

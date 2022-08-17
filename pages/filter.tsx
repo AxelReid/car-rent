@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import { NextPage } from 'next'
 import { Box, createStyles, Grid, Group } from '@mantine/core'
@@ -7,9 +7,11 @@ import cars from 'data/cars'
 import MyFooter from 'layouts/MyFooter'
 import MyHeader from 'layouts/MyHeader'
 import useGlobalStyles from 'styles/useGlobalStyles'
+import MyNavbar from 'layouts/MyNavbar'
 
-const CarCard = dynamic(() => import('components/Car/CarCard'))
-const MyNavbar = dynamic(() => import('layouts/MyNavbar'))
+const CarCard = dynamic(() => import('components/Car/CarCard'), {
+  suspense: true,
+})
 
 const useStyle = createStyles((theme) => ({
   bgRightCover: {
@@ -39,19 +41,21 @@ const Filter: NextPage = () => {
             <MyNavbar sticky />
             <Box p='xl' className={classes.bgBody}>
               <Grid>
-                {[...cars].map((car) => (
-                  <Grid.Col
-                    span={12}
-                    xs={6}
-                    sm={4}
-                    md={6}
-                    lg={4}
-                    xl={3}
-                    key={car.id}
-                  >
-                    <CarCard key={car.id} {...car} />
-                  </Grid.Col>
-                ))}
+                <Suspense>
+                  {[...cars].map((car) => (
+                    <Grid.Col
+                      span={12}
+                      xs={6}
+                      sm={4}
+                      md={6}
+                      lg={4}
+                      xl={3}
+                      key={car.id}
+                    >
+                      <CarCard key={car.id} {...car} />
+                    </Grid.Col>
+                  ))}
+                </Suspense>
               </Grid>
             </Box>
           </Group>

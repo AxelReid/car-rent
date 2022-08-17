@@ -13,5 +13,5 @@ export const car = {
   filter: (params: CarFilterParamTypes) =>
     request.get('/car/filter', { params }),
 
-  details: () => request.get('/car/details'),
+  details: (slug: string) => request.get('/car/detail/' + slug),
 }

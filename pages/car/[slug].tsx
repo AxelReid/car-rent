@@ -8,6 +8,7 @@ import MyComp from 'containers/MyComp'
 import MyFooter from 'layouts/MyFooter'
 import MyHeader from 'layouts/MyHeader'
 import { CarDetails } from 'types/car.dto'
+import { car } from 'requests'
 
 const CarsSlider = dynamic(() => import('containers/CarsSlider'))
 
@@ -19,29 +20,38 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const carSlug = params?.slug
-  return {
-    props: {
-      car: {
-        slug: '1',
-        name: 'Rs7 2021',
-        car_type: 'Audi',
-        images: [
-          '/imgs/card1car.png',
-          '/imgs/card2car.png',
-          '/imgs/card1bg.svg',
-        ],
-        price: '$80.00',
-        discount: '$95.00',
-        in_wishlist: true,
-        specs: { steering: 'Manual', capacity: '4 People', gasoline: '80L' },
-        description:
-          'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit iusto perferendis ullam ad harum officiis error asperiores repellat omnis velit officia vitae cum, est dolorem rerum, animi iste eveniet! Officiis',
-        rating: {
-          average: 4,
-          total: 97,
+  try {
+    const carDetail = await car.details('bmv')
+    return {
+      props: {
+        car: carDetail.data?.data,
+      },
+    }
+  } catch (error) {
+    return {
+      props: {
+        car: {
+          slug: '1',
+          name: 'Rs7 2021',
+          car_type: 'Audi',
+          images: [
+            '/imgs/card1car.png',
+            '/imgs/card2car.png',
+            '/imgs/card1bg.svg',
+          ],
+          price: '$80.00',
+          discount: '$95.00',
+          in_wishlist: true,
+          specs: { steering: 'Manual', capacity: '4 People', gasoline: '80L' },
+          description:
+            'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit iusto perferendis ullam ad harum officiis error asperiores repellat omnis velit officia vitae cum, est dolorem rerum, animi iste eveniet! Officiis',
+          rating: {
+            average: 4,
+            total: 97,
+          },
         },
       },
-    },
+    }
   }
 }
 

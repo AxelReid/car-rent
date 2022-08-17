@@ -1,5 +1,6 @@
 import { showNotification } from '@mantine/notifications'
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
+import { API_URL } from './constants'
 
 interface ApiProps {
   url: string
@@ -60,7 +61,7 @@ const init = {
   ) {
     const token = localStorage.getItem('token')
     let config: AxiosRequestConfig = {
-      baseURL: process.env.BASE_API_URL,
+      baseURL: API_URL,
       timeout: 30000,
       url: url,
       method: method,

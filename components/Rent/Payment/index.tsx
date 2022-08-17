@@ -1,18 +1,21 @@
 import { Accordion, Box, Card, Group, Radio, Stack, Text } from '@mantine/core'
 import { UseFormReturnType } from '@mantine/form'
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import useGlobalStyles from 'styles/useGlobalStyles'
 import {
+  BitcoinFormType,
   CreditCardFormType,
   NextPrevBtnProps,
+  PaymentTabValue,
   PaypalFormType,
   StepContent,
 } from 'types/rental.dto'
 import ActionsBtns from '../ActionsBtns'
+import Bitcoin from './Bitcoin'
 import CreditCard from './CreditCard'
 import PayPal from './PayPal'
 
-const panels = [
+const panels: { key: PaymentTabValue; label: string }[] = [
   {
     key: 'creditCard',
     label: 'Credit Card',
@@ -31,8 +34,9 @@ interface FormType {
   form: {
     creditCard: UseFormReturnType<CreditCardFormType>
     paypal: UseFormReturnType<PaypalFormType>
-    tab: string | null
-    setTab: Dispatch<SetStateAction<string | null>>
+    bitcoin: UseFormReturnType<BitcoinFormType>
+    tab: PaymentTabValue
+    setTab: Dispatch<SetStateAction<PaymentTabValue>>
   }
 }
 
@@ -43,57 +47,60 @@ const Payment = ({
   nextStep,
 }: Omit<StepContent<null>, 'form'> & NextPrevBtnProps & FormType) => {
   const { classes, cx } = useGlobalStyles()
-  const [activeTab, setActiveTab] = useState<string | null>(
-    form.tab || panels[0].key
-  )
 
-  const handleActiveTab = (val: string | null) => {
-    setActiveTab(val)
-    form.setTab(val)
+  const content = {
+    creditCard: {
+      form: form.creditCard,
+      component: <CreditCard form={form.creditCard} />,
+    },
+    paypal: { form: form.paypal, component: <PayPal form={form.paypal} /> },
+    bitcoin: { form: form.bitcoin, component: <Bitcoin form={form.bitcoin} /> },
   }
+  const invalid =
+    Object.values(content[form.tab].form.values).findIndex((val) => !val) !== -1
 
-  const content: { [index: string]: any } = {
-    creditCard: <CreditCard form={form.creditCard} />,
-    paypal: <PayPal form={form.paypal} />,
-    bitcoin: 'Bitcoin',
+  const handleTab = (key: PaymentTabValue) => {
+    form.setTab(key)
   }
 
   const submit = () => {
-    nextStep()
+    const { hasErrors } = content[form.tab].form?.validate()
+    if (!hasErrors) nextStep()
   }
 
   return (
     <Card radius='lg' p='xl'>
       {header}
-      <Stack my='xl' spacing='lg'>
-        {panels.map((panel) => (
-          <Card
-            key={panel.key}
-            radius={12}
-            px='sm'
-            py={4}
-            className={cx(classes.boxBg)}
-          >
-            <Group p='md' onClick={() => handleActiveTab(panel.key)}>
-              <Radio
-                value={panel.key}
-                checked={panel.key === activeTab}
-                readOnly
-              />
-              <Text weight={600} size='md'>
-                {panel.label}
-              </Text>
-            </Group>
-            {activeTab === panel.key && (
-              <Box p='md' pt={4}>
-                {content[panel.key]}
-              </Box>
-            )}
-          </Card>
-        ))}
-      </Stack>
-
-      <ActionsBtns disabled={false} prevStep={prevStep} submit={submit} />
+      <form onSubmit={content[form.tab].form?.onSubmit(submit)}>
+        <Stack mt='xl' spacing='lg'>
+          {panels.map((panel) => (
+            <Card
+              key={panel.key}
+              radius={12}
+              px='sm'
+              py={4}
+              className={cx(classes.boxBg)}
+            >
+              <Group p='md' onClick={() => handleTab(panel.key)}>
+                <Radio
+                  value={panel.key}
+                  checked={panel.key === form.tab}
+                  readOnly
+                />
+                <Text weight={600} size='md'>
+                  {panel.label}
+                </Text>
+              </Group>
+              {form.tab === panel.key && (
+                <Box p='md' pt={4}>
+                  {content[panel.key].component}
+                </Box>
+              )}
+            </Card>
+          ))}
+          <ActionsBtns disabled={invalid} prevStep={prevStep} submit={submit} />
+        </Stack>
+      </form>
     </Card>
   )
 }

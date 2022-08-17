@@ -67,7 +67,9 @@ const Billing = ({
             </Grid.Col>
           </Grid>
           <ActionsBtns
-            disabled={Object.values(form.values).indexOf('') !== -1}
+            disabled={
+              Object.values(form.values).findIndex((val) => !val) !== -1
+            }
             submit={submit}
           />
         </form>
