@@ -1,44 +1,29 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { NextPage } from 'next'
-import { Box, createStyles, Grid, Group } from '@mantine/core'
+import { Box, Grid, Group } from '@mantine/core'
 import MyComp from 'containers/MyComp'
 import cars from 'data/cars'
 import MyFooter from 'layouts/MyFooter'
 import MyHeader from 'layouts/MyHeader'
 import useGlobalStyles from 'styles/useGlobalStyles'
-import MyNavbar from 'layouts/MyNavbar'
+import FilterPanel from 'components/FilterPanel'
 
 const CarCard = dynamic(() => import('components/Car/CarCard'), {
   suspense: true,
 })
 
-const useStyle = createStyles((theme) => ({
-  bgRightCover: {
-    position: 'relative',
-    '::before': {
-      position: 'absolute',
-      width: '50%',
-      left: 0,
-      top: 0,
-      height: '100%',
-      background:
-        theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-      content: '""',
-      zIndex: -1,
-    },
-  },
-}))
 const Filter: NextPage = () => {
   const { classes } = useGlobalStyles()
-  const { classes: cls } = useStyle()
+  const [opened, setOpened] = useState(false)
+
   return (
     <>
-      <MyHeader sticky />
-      <Box className={cls.bgRightCover}>
+      <MyHeader sticky opened={opened} toggleOpen={setOpened} />
+      <Box className={classes.bgCover}>
         <MyComp p={0}>
           <Group spacing={0} align='stretch' noWrap>
-            <MyNavbar sticky />
+            <FilterPanel opened={opened} toggleOpen={setOpened} />
             <Box p='xl' className={classes.bgBody}>
               <Grid>
                 <Suspense>

@@ -8,7 +8,8 @@ import MyComp from 'containers/MyComp'
 import MyFooter from 'layouts/MyFooter'
 import MyHeader from 'layouts/MyHeader'
 import { CarDetails } from 'types/car.dto'
-import { car } from 'requests'
+import requests from 'requests'
+import MyCard from 'components/MyCard'
 
 const CarsSlider = dynamic(() => import('containers/CarsSlider'))
 
@@ -21,7 +22,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const carSlug = params?.slug
   try {
-    const carDetail = await car.details('bmv')
+    const carDetail = await requests.cars.details('bmv')
     return {
       props: {
         car: carDetail.data?.data,
@@ -33,7 +34,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         car: {
           slug: '1',
           name: 'Rs7 2021',
-          car_type: 'Audi',
+          car_type: { key: 'audi', name: 'Audi' },
           images: [
             '/imgs/card1car.png',
             '/imgs/card2car.png',
@@ -67,7 +68,7 @@ const reviews = [
     },
     date: '12 July 2022',
     rating: 3,
-    review:
+    content:
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore asperiores quis eaque accusantium nostrum facere minus dolor sunt quo consequuntur officia corporis aspernatur necessitatibus ullam doloremque labore est voluptate, iste quibusdam iure beatae voluptatum non? Dolor explicabo nemo excepturi eos autem facere ab animi dolores.',
   },
   {
@@ -79,7 +80,7 @@ const reviews = [
     },
     date: '12 July 2022',
     rating: 5,
-    review:
+    content:
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore asperiores quis eaque accusantium nostrum facere minus dolor sunt quo consequuntur officia corporis aspernatur necessitatibus ullam doloremque labore est voluptate, iste quibusdam iure beatae voluptatum non? Dolor explicabo nemo excepturi eos autem facere ab animi dolores.',
   },
   {
@@ -91,7 +92,7 @@ const reviews = [
     },
     date: '12 July 2022',
     rating: 2,
-    review:
+    content:
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore asperiores quis eaque accusantium nostrum facere minus dolor sunt quo consequuntur officia corporis aspernatur necessitatibus ullam doloremque labore est voluptate, iste quibusdam iure beatae voluptatum non? Dolor explicabo nemo excepturi eos autem facere ab animi dolores.',
   },
 ]
@@ -103,7 +104,7 @@ const Car = ({ car }: Props) => {
       <MyComp pt={30} mb='xl'>
         <Stack spacing='xl'>
           <CarDetail {...car} />
-          <Card radius='lg' p='xl'>
+          <MyCard>
             <Group>
               <Title order={3}>Reviews</Title>
               <Badge size='xl' radius='md' variant='filled'>
@@ -115,7 +116,7 @@ const Car = ({ car }: Props) => {
                 <Review key={i} {...review} />
               ))}
             </Stack>
-          </Card>
+          </MyCard>
           <CarsSlider title='Recent Cars' />
           <CarsSlider title='Recomendation Cars' link='/filter' />
         </Stack>

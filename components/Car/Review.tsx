@@ -4,7 +4,7 @@ import React from 'react'
 import useGlobalStyles from 'styles/useGlobalStyles'
 import { CarReview } from 'types/car.dto'
 
-const Review = ({ user, date, review, rating }: CarReview) => {
+const Review = ({ user, date, content, rating }: CarReview) => {
   const { classes } = useGlobalStyles()
 
   return (
@@ -36,7 +36,7 @@ const Review = ({ user, date, review, rating }: CarReview) => {
           className={classes.secondary_color}
           style={{ lineHeight: 1.9 }}
         >
-          {review}
+          {content}
         </Text>
       </Box>
     </Group>

@@ -6,15 +6,7 @@ import MyComp from 'containers/MyComp'
 import useRentalForms from 'hooks/useRentalForms'
 import MyFooter from 'layouts/MyFooter'
 import MyHeader from 'layouts/MyHeader'
-import {
-  BillingFormType,
-  BitcoinFormType,
-  CreditCardFormType,
-  FinalFormType,
-  PaymentTabValue,
-  PaypalFormType,
-  RentalInfoFormType,
-} from 'types/rental.dto'
+import { FinalFormType } from 'types/rental.dto'
 
 const Billing = dynamic(() => import('components/Rent/Billing'))
 const RentalInfo = dynamic(() => import('components/Rent/RentalInfo'))

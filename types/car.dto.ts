@@ -9,7 +9,10 @@ export interface CarCardTypes {
   slug?: string
   in_wishlist: boolean
   name: string
-  car_type: string
+  car_type: {
+    key: string
+    name: string
+  }
   image: string
   specs: CarSpecs
   price: string
@@ -37,7 +40,7 @@ export interface CarReview {
   id?: string
   date: string
   rating: number
-  review: string
+  content: string
   user: {
     avatar: string
     name: string

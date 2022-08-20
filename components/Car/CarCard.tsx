@@ -16,6 +16,7 @@ import Specs from './CarCardSpecs'
 import { CarCardTypes } from 'types/car.dto'
 import Link from 'next/link'
 import NextImage from 'next/image'
+import MyCard from 'components/MyCard'
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   secondary_color: {
@@ -49,7 +50,7 @@ const CarCard = ({
   const linkToRental = '/rent/' + slug
 
   return (
-    <Card radius='lg' p='xl' className={classes.hoverCard}>
+    <MyCard className={classes.hoverCard}>
       <Group position='apart' align='flex-start'>
         <Stack spacing={0}>
           <Link href={linkToDetails} passHref>
@@ -58,7 +59,7 @@ const CarCard = ({
                 {name}
               </Text>
               <Text weight={600} className={classes.secondary_color} size='sm'>
-                {car_type}
+                {car_type.name}
               </Text>
             </a>
           </Link>
@@ -114,7 +115,7 @@ const CarCard = ({
           </Link>
         </Group>
       </Stack>
-    </Card>
+    </MyCard>
   )
 }
 export default CarCard

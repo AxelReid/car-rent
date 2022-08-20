@@ -1,4 +1,5 @@
 import { Box, Card, Divider, Group, Stack, Text } from '@mantine/core'
+import MyCard from 'components/MyCard'
 import Star from 'components/Star'
 import Image from 'next/image'
 import React, { memo } from 'react'
@@ -7,7 +8,7 @@ import useGlobalStyles from 'styles/useGlobalStyles'
 const RentalCar = memo(() => {
   const { classes } = useGlobalStyles()
   return (
-    <Card radius='lg' p='xl'>
+    <MyCard>
       <Text size='xl' weight='bold'>
         Rental Summary
       </Text>
@@ -63,7 +64,7 @@ const RentalCar = memo(() => {
           </Text>
         </Group>
       </Stack>
-    </Card>
+    </MyCard>
   )
 })
 RentalCar.displayName = 'RentalCar'

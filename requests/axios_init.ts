@@ -62,6 +62,9 @@ const init = {
     const token = localStorage.getItem('token')
     let config: AxiosRequestConfig = {
       baseURL: API_URL,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       timeout: 30000,
       url: url,
       method: method,

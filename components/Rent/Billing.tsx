@@ -7,6 +7,7 @@ import {
 } from 'types/rental.dto'
 import useInputStyles from 'styles/useInputStyles'
 import ActionsBtns from './ActionsBtns'
+import MyCard from 'components/MyCard'
 
 const Billing = ({
   header,
@@ -20,7 +21,7 @@ const Billing = ({
     if (!hasErrors) nextStep()
   }
   return (
-    <Card radius='lg' p='xl'>
+    <MyCard>
       {header}
       <Box mt='xl'>
         <form onSubmit={form.onSubmit(submit)}>
@@ -74,7 +75,7 @@ const Billing = ({
           />
         </form>
       </Box>
-    </Card>
+    </MyCard>
   )
 }
 export default Billing

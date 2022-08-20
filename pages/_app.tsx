@@ -9,7 +9,6 @@ import {
 import MyGlobalStyles from '../styles/MyGlobalStyles'
 import { useLocalStorage } from '@mantine/hooks'
 import { NotificationsProvider } from '@mantine/notifications'
-import Seo from 'components/Seo'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({

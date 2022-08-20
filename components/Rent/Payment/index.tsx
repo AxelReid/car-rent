@@ -1,5 +1,6 @@
 import { Accordion, Box, Card, Group, Radio, Stack, Text } from '@mantine/core'
 import { UseFormReturnType } from '@mantine/form'
+import MyCard from 'components/MyCard'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import useGlobalStyles from 'styles/useGlobalStyles'
 import {
@@ -69,7 +70,7 @@ const Payment = ({
   }
 
   return (
-    <Card radius='lg' p='xl'>
+    <MyCard>
       {header}
       <form onSubmit={content[form.tab].form?.onSubmit(submit)}>
         <Stack mt='xl' spacing='lg'>
@@ -101,7 +102,7 @@ const Payment = ({
           <ActionsBtns disabled={invalid} prevStep={prevStep} submit={submit} />
         </Stack>
       </form>
-    </Card>
+    </MyCard>
   )
 }
 export default Payment

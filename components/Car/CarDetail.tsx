@@ -11,6 +11,7 @@ import {
   Text,
   Title,
 } from '@mantine/core'
+import MyCard from 'components/MyCard'
 import Star from 'components/Star'
 import Link from 'next/link'
 import React, { useState } from 'react'
@@ -79,7 +80,7 @@ const CarDetail = ({
         </Box>
       </Grid.Col>
       <Grid.Col span={12} sm={6} lg={7}>
-        <Card radius='lg' p='xl'>
+        <MyCard>
           <Group position='apart' align='start'>
             <Box>
               <Title order={1}>{name}</Title>
@@ -116,7 +117,7 @@ const CarDetail = ({
                   Type Car
                 </Text>
                 <Text size='lg' className={classes.secondary_color}>
-                  {car_type}
+                  {car_type.name}
                 </Text>
               </Group>
             </Grid.Col>
@@ -158,7 +159,7 @@ const CarDetail = ({
               </Button>
             </Link>
           </Group>
-        </Card>
+        </MyCard>
       </Grid.Col>
     </Grid>
   )

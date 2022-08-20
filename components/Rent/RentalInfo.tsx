@@ -24,6 +24,8 @@ import {
   LocationMarkerIcon,
 } from '@heroicons/react/outline'
 import ActionsBtns from './ActionsBtns'
+import MyCard from 'components/MyCard'
+import TextIndicator from 'components/TextIndicator'
 
 const useStyles = createStyles((theme, _params) => ({
   indicator: {
@@ -51,7 +53,7 @@ const Rental = ({
   }
 
   return (
-    <Card radius='lg' p='xl'>
+    <MyCard>
       {header}
       <form onSubmit={form.onSubmit(submit)}>
         <Box my='xl'>
@@ -89,7 +91,7 @@ const Rental = ({
           prevStep={prevStep}
         />
       </form>
-    </Card>
+    </MyCard>
   )
 }
 
@@ -112,20 +114,10 @@ const RentalAddress = ({
 
   return (
     <Box>
-      <Box pl={7}>
-        <Indicator
-          position='middle-start'
-          color={title === 'Pick-Up' ? 'blue' : 'cyan'}
-          withBorder
-          inline
-          size={17}
-          classNames={{ indicator: classes.indicator }}
-        >
-          <Text ml='md' size='md'>
-            {title}
-          </Text>
-        </Indicator>
-      </Box>
+      <TextIndicator
+        color={title === 'Pick-Up' ? 'blue' : 'cyan'}
+        title={title}
+      />
       <Select
         icon={<LocationMarkerIcon width={20} />}
         mt='lg'

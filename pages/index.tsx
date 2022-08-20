@@ -6,11 +6,17 @@ import Banner from 'components/home/Banner'
 import MyComp from 'containers/MyComp'
 import MyFooter from 'layouts/MyFooter'
 import dynamic from 'next/dynamic'
+import { useEffect } from 'react'
+import requests from 'requests'
 
 const CarsSlider = dynamic(() => import('containers/CarsSlider'))
 const Cars = dynamic(() => import('containers/Cars'))
 
 const Home: NextPage = () => {
+  useEffect(() => {
+    requests.cars.recommended().then((res) => console.log(res))
+  }, [])
+
   return (
     <>
       <MyHeader />

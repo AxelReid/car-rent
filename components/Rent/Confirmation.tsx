@@ -10,6 +10,7 @@ import {
   Text,
   useMantineTheme,
 } from '@mantine/core'
+import MyCard from 'components/MyCard'
 import React from 'react'
 import useGlobalStyles from 'styles/useGlobalStyles'
 import { FinalFormType, NextPrevBtnProps, StepContent } from 'types/rental.dto'
@@ -43,7 +44,7 @@ const Confirmation = ({
   }
 
   return (
-    <Card radius='lg' p='xl'>
+    <MyCard>
       {header}
       <Stack mt='xl' spacing='lg'>
         <Accept
@@ -107,7 +108,7 @@ const Confirmation = ({
           />
         </Box>
       </Stack>
-    </Card>
+    </MyCard>
   )
 }
 
