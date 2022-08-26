@@ -7,18 +7,22 @@ import {
   MantineThemeOverride,
 } from '@mantine/core'
 import MyGlobalStyles from '../styles/MyGlobalStyles'
-import { useLocalStorage } from '@mantine/hooks'
 import { NotificationsProvider } from '@mantine/notifications'
+import { GetServerSidePropsContext } from 'next'
+import { getCookie, setCookie } from 'cookies-next'
+import { useState } from 'react'
+import { NavigationProgress } from '@mantine/nprogress'
+import { RouterTransition } from 'components/RouterTransition'
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-    key: 'color-scheme',
-    defaultValue: 'light',
-    getInitialValueInEffect: true,
-  })
-
-  const toggleColorScheme = () => {
-    setColorScheme((current) => (current === 'dark' ? 'light' : 'dark'))
+function MyApp(props: AppProps & { colorScheme: ColorScheme }) {
+  const { Component, pageProps } = props
+  const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme)
+  const toggleColorScheme = (value: ColorScheme) => {
+    const nextColorSchem = value || (colorScheme === 'dark' ? 'light' : 'dark')
+    setColorScheme(nextColorSchem)
+    setCookie('mantine-color-scheme', nextColorSchem, {
+      maxAge: 60 * 60 * 24 * 30,
+    })
   }
 
   const theme: MantineThemeOverride = {
@@ -60,6 +64,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         theme={theme}
       >
         <MyGlobalStyles />
+        <RouterTransition />
         <NotificationsProvider>
           <Component {...pageProps} />
         </NotificationsProvider>
@@ -67,5 +72,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     </ColorSchemeProvider>
   )
 }
+
+MyApp.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
+  colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
+})
 
 export default MyApp

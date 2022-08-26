@@ -1,4 +1,9 @@
-import { CarFilterParamTypes } from 'types/request.dto'
+import { CarCardTypes, CarFilterTypes } from 'types/car.dto'
+import {
+  CarFilterParamTypes,
+  FilterRes,
+  FilterResData,
+} from 'types/request.dto'
 import { request } from '../init'
 
 const cars = {
@@ -10,8 +15,8 @@ const cars = {
     request.get('/car/recommended', { params }),
   recent: () => request.get('/car/recent'),
 
-  filter: (params: CarFilterParamTypes) =>
-    request.get('/car/filter', { params }),
+  filter: (params: CarFilterParamTypes): Promise<FilterResData> =>
+    request.get('/car/filter', { params }).then((res) => res.data),
 
   details: (slug: string) => request.get('/car/detail/' + slug),
 }

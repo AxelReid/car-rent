@@ -1,4 +1,4 @@
-import { InformationCircleIcon } from '@heroicons/react/outline'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { Text, TextInput, Tooltip } from '@mantine/core'
 import React from 'react'
 import useInputStyles from 'styles/useInputStyles'

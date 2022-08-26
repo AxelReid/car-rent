@@ -1,4 +1,15 @@
-import { HomeIcon, LightBulbIcon } from '@heroicons/react/solid'
+import {
+  ArchiveBoxIcon,
+  CloudArrowUpIcon,
+  CircleStackIcon,
+  LightBulbIcon,
+  ArrowUpTrayIcon,
+  UserIcon,
+  ClipboardDocumentIcon,
+  ClipboardDocumentListIcon,
+  DocumentTextIcon,
+} from '@heroicons/react/24/outline'
+import { HomeIcon } from '@heroicons/react/24/solid'
 
 export const dashboardLinks = [
   {
@@ -11,28 +22,25 @@ export const dashboardLinks = [
       },
       {
         label: 'Car Rent',
-        icon: <LightBulbIcon width={24} />,
+        icon: <ArchiveBoxIcon width={24} />,
         path: '/dashboard/rents',
       },
       {
-        label: 'Insight',
-        icon: <LightBulbIcon width={24} />,
-        path: '/dashboard/rents',
-      },
-      {
-        label: 'Reimburse',
-        icon: <LightBulbIcon width={24} />,
-        path: '/dashboard/rents',
-      },
-      {
-        label: 'Inbox',
-        icon: <LightBulbIcon width={24} />,
-        path: '/dashboard/rents',
-      },
-      {
-        label: 'Calendar',
-        icon: <LightBulbIcon width={24} />,
-        path: '/dashboard/rents',
+        label: 'Seller Panel',
+        icon: <UserIcon width={24} />,
+        // path: '/dashboard/create',
+        children: [
+          {
+            label: 'My rentals',
+            icon: <DocumentTextIcon width={24} />,
+            path: '/dashboard/my-rents',
+          },
+          {
+            label: 'Create Rental',
+            icon: <ArrowUpTrayIcon width={24} />,
+            path: '/dashboard/create',
+          },
+        ],
       },
     ],
   },

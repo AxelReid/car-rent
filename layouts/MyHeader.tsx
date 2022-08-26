@@ -10,10 +10,13 @@ import {
   useMantineColorScheme,
 } from '@mantine/core'
 import React, { memo } from 'react'
-import { MoonIcon, SearchIcon } from '@heroicons/react/outline'
+import {
+  MoonIcon,
+  MagnifyingGlassIcon as SearchIcon,
+} from '@heroicons/react/24/outline'
 import MyIcon from 'components/MyIcon'
 import useStyles from 'styles/useGlobalStyles'
-import { BellIcon, SunIcon } from '@heroicons/react/solid'
+import { BellIcon, SunIcon } from '@heroicons/react/24/solid'
 import MyComp from 'containers/MyComp'
 import Link from 'next/link'
 import { SidebarToggleType } from 'types/default.dt'

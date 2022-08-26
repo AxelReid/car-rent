@@ -1,19 +1,22 @@
 import React, { Suspense, useState } from 'react'
 import dynamic from 'next/dynamic'
-import { NextPage } from 'next'
+import { GetServerSideProps } from 'next'
 import { Box, Grid, Group } from '@mantine/core'
 import MyComp from 'containers/MyComp'
-import cars from 'data/cars'
 import MyFooter from 'layouts/MyFooter'
 import MyHeader from 'layouts/MyHeader'
 import useGlobalStyles from 'styles/useGlobalStyles'
 import FilterPanel from 'components/FilterPanel'
+import requests from 'requests'
+import { FilterResData } from 'types/request.dto'
 
-const CarCard = dynamic(() => import('components/Car/CarCard'), {
-  suspense: true,
-})
+const CarCard = dynamic(() => import('components/Car/CarCard'))
 
-const Filter: NextPage = () => {
+interface Props {
+  data: FilterResData
+}
+
+const Filter = ({ data }: Props) => {
   const { classes } = useGlobalStyles()
   const [opened, setOpened] = useState(false)
 
@@ -23,11 +26,15 @@ const Filter: NextPage = () => {
       <Box className={classes.bgCover}>
         <MyComp p={0}>
           <Group spacing={0} align='stretch' noWrap>
-            <FilterPanel opened={opened} toggleOpen={setOpened} />
-            <Box p='xl' className={classes.bgBody}>
+            <FilterPanel
+              filters={data?.filter}
+              opened={opened}
+              toggleOpen={setOpened}
+            />
+            <Box p='xl' className={classes.bgBody} style={{ flex: 1 }}>
               <Grid>
                 <Suspense>
-                  {[...cars].map((car) => (
+                  {data?.data.map((car) => (
                     <Grid.Col
                       span={12}
                       xs={6}
@@ -50,4 +57,18 @@ const Filter: NextPage = () => {
     </>
   )
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  try {
+    const data = await requests.cars.filter(query)
+    return {
+      props: { data },
+    }
+  } catch (error) {
+    return {
+      props: { data: {} },
+    }
+  }
+}
+
 export default Filter

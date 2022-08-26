@@ -17,6 +17,7 @@ import { CarCardTypes } from 'types/car.dto'
 import Link from 'next/link'
 import NextImage from 'next/image'
 import MyCard from 'components/MyCard'
+import { PhotoIcon } from '@heroicons/react/24/outline'
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   secondary_color: {
@@ -76,37 +77,41 @@ const CarCard = ({
         </ActionIcon>
       </Group>
       <AspectRatio ratio={3 / 2.2}>
-        <Link href={linkToDetails} passHref>
-          <a>
-            <NextImage
-              layout='fill'
-              objectFit='contain'
-              src={image}
-              alt={name}
-            />
-          </a>
-        </Link>
+        {image ? (
+          <Link href={linkToDetails} passHref>
+            <a>
+              <NextImage
+                layout='fill'
+                objectFit='contain'
+                src={image}
+                alt={name}
+              />
+            </a>
+          </Link>
+        ) : (
+          <PhotoIcon width={20} strokeWidth={0.3} opacity={0.2} />
+        )}
       </AspectRatio>
       <Stack spacing='lg'>
         <Specs secondary_color={classes.secondary_color} {...specs} />
         <Group position='apart' align='center'>
           <Box>
             <Group noWrap spacing={5}>
-              <Title order={4}>{price} /</Title>
+              <Title order={4}>${price} /</Title>
               <Text size='sm' className={classes.secondary_color} weight={600}>
                 day
               </Text>
             </Group>
-            {discount && (
+            {discount ? (
               <Text
                 size='sm'
                 strikethrough
                 weight={600}
                 className={classes.secondary_color}
               >
-                {discount}
+                ${discount}
               </Text>
-            )}
+            ) : null}
           </Box>
           <Link href={linkToRental} passHref>
             <Button size='md' component='a'>

@@ -1,14 +1,18 @@
-import { Box, Button, Center, Group, SimpleGrid, Text } from '@mantine/core'
+import { Box, Button, Group, SimpleGrid, Text } from '@mantine/core'
 import React, { memo } from 'react'
 import cars from 'data/cars'
 import CarCard from 'components/Car/CarCard'
+import { CarCardTypes, DataInfo } from 'types/car.dto'
 
 type Props = {
   title?: string
   loadMore?: () => void
+  info: DataInfo
+  loading: boolean
+  cars: CarCardTypes[]
 }
 
-const Cars = memo(({ title, loadMore }: Props) => {
+const Cars = memo(({ title, loadMore, info, loading }: Props) => {
   return (
     <Box>
       {title && (
@@ -39,8 +43,14 @@ const Cars = memo(({ title, loadMore }: Props) => {
       {typeof loadMore === 'function' && (
         <Group pt={50} position='apart'>
           <div />
-          <Button size='md'>Show more cars</Button>
-          <Text color='dimmed'>120 Cars</Text>
+          {info?.total < info?.current && (
+            <Button onClick={loadMore} size='md' loading={loading}>
+              Show more cars
+            </Button>
+          )}
+          <Text color='dimmed'>
+            {info?.total || 0} Car{info?.total < 1 ? 's' : ''}
+          </Text>
         </Group>
       )}
     </Box>

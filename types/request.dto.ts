@@ -1,3 +1,5 @@
+import { CarCardTypes, CarFilterTypes, FilterSortType } from './car.dto'
+
 export interface LoginType {
   username?: string
   email?: string
@@ -12,9 +14,18 @@ export interface SignUpType {
 
 // car/filter
 export interface CarFilterParamTypes {
-  sort?: string //'popular|capacity|desc|esc'
+  sort?: FilterSortType
   capacity?: number
   min?: number
   max?: number
   type?: string
+}
+export interface FilterRes {
+  total: number
+  current: number
+  page: number
+}
+export interface FilterResData extends FilterRes {
+  data: CarCardTypes[]
+  filter: CarFilterTypes
 }

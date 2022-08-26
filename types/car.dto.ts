@@ -47,6 +47,19 @@ export interface CarReview {
     bio: string
   }
 }
-
+export interface DataInfo {
+  total: number
+  current: number
+  page: number
+}
 export type Recommended = CarCardTypes[]
 export type Recent = CarCardTypes[]
+
+// filter
+export type FilterSortType = 'popular' | 'new' | 'desc' | 'asc'
+export interface CarFilterTypes {
+  sort?: { label: FilterSortType; selected: boolean }[]
+  capacity?: { label: number; selected: boolean }[]
+  price?: { min?: number; max?: number }
+  type?: { label: string; selected: boolean; total: number }[]
+}

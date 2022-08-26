@@ -43,8 +43,8 @@ const MyNavbar = memo(
             sx={{ flexDirection: 'column', height: 'calc(100% - 45px)' }}
             spacing={0}
           >
-            <ScrollArea p='lg' sx={{ flex: 1 }}>
-              {children}
+            <ScrollArea sx={{ flex: 1 }}>
+              <Box m='lg'>{children}</Box>
             </ScrollArea>
             {bottomSection && (
               <Box p='lg' pt={0}>
@@ -64,8 +64,8 @@ const MyNavbar = memo(
           hidden
           width={{ md: 300 }}
         >
-          <Navbar.Section p='lg' grow component={ScrollArea}>
-            {children}
+          <Navbar.Section grow component={ScrollArea}>
+            <Box m='lg'>{children}</Box>
           </Navbar.Section>
           {bottomSection && (
             <Navbar.Section p='lg' pt={0}>

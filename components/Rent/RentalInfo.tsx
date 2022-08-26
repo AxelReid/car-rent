@@ -21,8 +21,8 @@ import useInputStyles from 'styles/useInputStyles'
 import {
   CalendarIcon,
   ClockIcon,
-  LocationMarkerIcon,
-} from '@heroicons/react/outline'
+  MapPinIcon,
+} from '@heroicons/react/24/outline'
 import ActionsBtns from './ActionsBtns'
 import MyCard from 'components/MyCard'
 import TextIndicator from 'components/TextIndicator'
@@ -119,7 +119,7 @@ const RentalAddress = ({
         title={title}
       />
       <Select
-        icon={<LocationMarkerIcon width={20} />}
+        icon={<MapPinIcon width={20} />}
         mt='lg'
         variant='filled'
         size='md'
