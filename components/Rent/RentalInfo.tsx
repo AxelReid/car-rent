@@ -1,15 +1,4 @@
-import {
-  Box,
-  Card,
-  createStyles,
-  Grid,
-  Group,
-  Indicator,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-} from '@mantine/core'
+import { Box, Grid, Group, Select, Stack, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import {
   NextPrevBtnProps,
@@ -26,16 +15,6 @@ import {
 import ActionsBtns from './ActionsBtns'
 import MyCard from 'components/MyCard'
 import TextIndicator from 'components/TextIndicator'
-
-const useStyles = createStyles((theme, _params) => ({
-  indicator: {
-    borderWidth: 4,
-    borderColor:
-      theme.colorScheme === 'dark'
-        ? 'rgba(37,38,43,0.7)'
-        : 'rgba(255,255,255,0.8)',
-  },
-}))
 
 const Rental = ({
   header,
@@ -109,7 +88,6 @@ const RentalAddress = ({
   title,
   form,
 }: RentalAddressTypes & Omit<StepContent<RentalInfoFormType>, 'header'>) => {
-  const { classes } = useStyles()
   const { classes: cls } = useInputStyles()
 
   return (

@@ -1,18 +1,12 @@
 import { Carousel } from '@mantine/carousel'
-import {
-  Anchor,
-  Box,
-  createStyles,
-  Group,
-  Text,
-  useMantineTheme,
-} from '@mantine/core'
+import { Box, createStyles, Group, Text, useMantineTheme } from '@mantine/core'
 import React, { memo, useRef } from 'react'
 import cars from 'data/cars'
 import { useMediaQuery } from '@mantine/hooks'
 import Autoplay from 'embla-carousel-autoplay'
 import CarCard from 'components/Car/CarCard'
 import Link from 'next/link'
+import { CarCardTypes } from 'types/car.dto'
 
 const useStyles = createStyles((_theme, _params, getRef) => ({
   controls: {
@@ -30,13 +24,15 @@ const useStyles = createStyles((_theme, _params, getRef) => ({
   },
 }))
 
-type Props = { title?: string; link?: string }
+type Props = { title?: string; link?: string; data: CarCardTypes[] }
 
-const CarsSlider = memo(({ title, link }: Props) => {
+const CarsSlider = memo(({ title, link, data = [] }: Props) => {
   const theme = useMantineTheme()
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`)
   const { classes } = useStyles()
   const autoplay = useRef(Autoplay({ delay: 3000 }))
+
+  if (data.length < 1) return null
 
   return (
     <Box>
@@ -86,7 +82,7 @@ const CarsSlider = memo(({ title, link }: Props) => {
           },
         }}
       >
-        {cars.slice(0, 7).map((car) => (
+        {data.map((car) => (
           <Carousel.Slide key={car.id} size={304}>
             <CarCard {...car} />
           </Carousel.Slide>

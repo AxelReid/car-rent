@@ -1,3 +1,4 @@
+import { PhotoIcon } from '@heroicons/react/24/outline'
 import {
   ActionIcon,
   AspectRatio,
@@ -10,6 +11,7 @@ import {
   Image,
   Text,
   Title,
+  TypographyStylesProvider,
 } from '@mantine/core'
 import MyCard from 'components/MyCard'
 import Star from 'components/Star'
@@ -46,7 +48,8 @@ const CarDetail = ({
 }: CarDetails) => {
   const { classes } = useGlobalStyles()
   const { classes: cardClasses, cx } = useCardStyles()
-  const [selectedImg, setImage] = useState(images[0])
+  const [selectedImg, setImage] = useState(images ? images[0] : '')
+  const [imgError, setImgError] = useState(!images?.length)
 
   return (
     <Grid align='stretch' gutter={25}>
@@ -54,11 +57,15 @@ const CarDetail = ({
         <Box className={cardClasses.sticky}>
           <AspectRatio ratio={16 / 10}>
             <Card radius='lg' p={0}>
-              <Image src={selectedImg} alt={name} />
+              {imgError ? (
+                <PhotoIcon width={'45%'} strokeWidth={0.2} opacity={0.2} />
+              ) : (
+                <Image src={selectedImg} alt={name} />
+              )}
             </Card>
           </AspectRatio>
           <Grid mt='sm' gutter={25}>
-            {images.map((img, i) => (
+            {images?.map((img, i) => (
               <Grid.Col key={i} span={4}>
                 <AspectRatio ratio={1 / 0.8}>
                   <Card
@@ -102,14 +109,9 @@ const CarDetail = ({
               />
             </ActionIcon>
           </Group>
-          <Text
-            className={classes.secondary_color}
-            size='xl'
-            style={{ lineHeight: 1.9 }}
-            my={30}
-          >
-            {description}
-          </Text>
+          <TypographyStylesProvider my={30} className={classes.secondary_color}>
+            <div dangerouslySetInnerHTML={{ __html: description }} />
+          </TypographyStylesProvider>
           <Grid mb='xl' gutter='lg'>
             <Grid.Col span={6}>
               <Group position='apart'>
@@ -117,7 +119,7 @@ const CarDetail = ({
                   Type Car
                 </Text>
                 <Text size='lg' className={classes.secondary_color}>
-                  {car_type.name}
+                  {car_type}
                 </Text>
               </Group>
             </Grid.Col>

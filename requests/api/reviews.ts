@@ -1,4 +1,4 @@
-import { request } from '../init'
+import { request } from '../request'
 
 const reviews = {
   // data: [],total: 100, current: 30

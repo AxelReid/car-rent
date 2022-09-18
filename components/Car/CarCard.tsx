@@ -3,7 +3,6 @@ import {
   AspectRatio,
   Box,
   Button,
-  Card,
   createStyles,
   Group,
   Image,
@@ -11,7 +10,7 @@ import {
   Text,
   Title,
 } from '@mantine/core'
-import React, { memo } from 'react'
+import React, { useState } from 'react'
 import Specs from './CarCardSpecs'
 import { CarCardTypes } from 'types/car.dto'
 import Link from 'next/link'
@@ -47,6 +46,7 @@ const CarCard = ({
   slug,
 }: CarCardTypes) => {
   const { classes } = useStyles()
+  const [imgErr, setImgErr] = useState(!image)
   const linkToDetails = '/car/' + slug
   const linkToRental = '/rent/' + slug
 
@@ -60,7 +60,7 @@ const CarCard = ({
                 {name}
               </Text>
               <Text weight={600} className={classes.secondary_color} size='sm'>
-                {car_type.name}
+                {car_type}
               </Text>
             </a>
           </Link>
@@ -77,7 +77,7 @@ const CarCard = ({
         </ActionIcon>
       </Group>
       <AspectRatio ratio={3 / 2.2}>
-        {image ? (
+        {!imgErr ? (
           <Link href={linkToDetails} passHref>
             <a>
               <NextImage
@@ -85,6 +85,7 @@ const CarCard = ({
                 objectFit='contain'
                 src={image}
                 alt={name}
+                onError={() => setImgErr(true)}
               />
             </a>
           </Link>

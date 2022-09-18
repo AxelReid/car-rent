@@ -6,12 +6,15 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import useGlobalStyles from 'styles/useGlobalStyles'
 import { ArrowLeftOnRectangleIcon as LogoutIcon } from '@heroicons/react/24/outline'
-import { SidebarToggleType } from 'types/default.dt'
+import { Permission_types, SidebarToggleType } from 'types/default.dt'
+import requests from 'requests'
+import guard from 'utils/guard'
 
 interface MenuType {
   label: string
   icon: JSX.Element
   path?: string
+  permissions?: Permission_types[] | string[]
   children?: MenuType[]
 }
 
@@ -19,12 +22,18 @@ const DashboardPanel = memo(({ opened, toggleOpen }: SidebarToggleType) => {
   const router = useRouter()
   const { classes } = useGlobalStyles()
 
+  const logout = async () => {
+    await requests.auth.logout()
+  }
+
   const Items = ({ items }: { items: MenuType[] }) => {
     return (
       <Stack spacing={3} my={3}>
-        {items.map((item, i) => (
-          <Item key={i} item={item} />
-        ))}
+        {items
+          .filter((item) => guard(item?.permissions))
+          .map((item, i) => (
+            <Item key={i} item={item} />
+          ))}
       </Stack>
     )
   }
@@ -102,6 +111,7 @@ const DashboardPanel = memo(({ opened, toggleOpen }: SidebarToggleType) => {
             borderRadius: theme.radius.md,
           })}
           icon={<LogoutIcon className={classes.secondary_color} width={24} />}
+          onClick={logout}
           label={
             <Text
               transform='capitalize'

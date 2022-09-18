@@ -7,7 +7,7 @@ interface Props extends DefaultProps {
 
 const MyComp = (props: Props) => {
   return (
-    <Container {...props} size='xl'>
+    <Container {...props} size='xl' style={{ position: 'relative' }}>
       {props.children}
     </Container>
   )

@@ -12,11 +12,17 @@ const useInputStyles = createStyles((theme, _params, getRef) => ({
         ? theme.colors.dark[7]
         : theme.colors.gray[0],
   },
-  input2bg: {
+  inputBg: {
     background:
       theme.colorScheme === 'dark'
         ? theme.colors.dark[7]
         : theme.colors.gray[0],
+  },
+  inputBgDarker: {
+    background:
+      theme.colorScheme === 'dark'
+        ? theme.colors.dark[8]
+        : theme.colors.gray[1],
   },
   label: {
     fontSize: theme.fontSizes.md,

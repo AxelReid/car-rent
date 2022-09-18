@@ -56,5 +56,31 @@ const useGlobalStyles = createStyles((theme, _params, getRef) => ({
       zIndex: -1,
     },
   },
+
+  imgPreview: {
+    position: 'relative',
+    width: 80,
+    height: 80,
+    borderRadius: theme.radius.md,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor:
+      theme.colorScheme === 'dark'
+        ? theme.colors.gray[7]
+        : theme.colors.gray[4],
+    '.inner-icon': {
+      position: 'absolute',
+      inset: 0,
+      zIndex: 1,
+      display: 'none',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: theme.fn.rgba(theme.black, 0.6),
+    },
+    '&:hover .inner-icon': {
+      display: 'flex',
+    },
+  },
 }))
 export default useGlobalStyles

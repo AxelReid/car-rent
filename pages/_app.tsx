@@ -11,7 +11,6 @@ import { NotificationsProvider } from '@mantine/notifications'
 import { GetServerSidePropsContext } from 'next'
 import { getCookie, setCookie } from 'cookies-next'
 import { useState } from 'react'
-import { NavigationProgress } from '@mantine/nprogress'
 import { RouterTransition } from 'components/RouterTransition'
 
 function MyApp(props: AppProps & { colorScheme: ColorScheme }) {

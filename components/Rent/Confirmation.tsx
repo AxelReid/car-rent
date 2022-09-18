@@ -1,20 +1,20 @@
 import {
   Box,
   Button,
-  Card,
   Checkbox,
-  Grid,
   Group,
   Paper,
   Stack,
   Text,
   useMantineTheme,
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import MyCard from 'components/MyCard'
 import React from 'react'
 import useGlobalStyles from 'styles/useGlobalStyles'
 import { FinalFormType, NextPrevBtnProps, StepContent } from 'types/rental.dto'
 import BoxTitle from './BoxTitle'
+import { CheckIcon } from '@heroicons/react/24/outline'
 
 interface StateType {
   newsLetter: boolean
@@ -41,6 +41,33 @@ const Confirmation = ({
 
   const confirmRental = () => {
     console.log(finalForm)
+    showNotification({
+      color: 'green',
+      title: 'Rental is submitted successfully',
+      message:
+        'Your car will be ready at the ' +
+        finalForm.rentalInfo.date_from +
+        ', you can pick it up in the ' +
+        finalForm.rentalInfo.address_from +
+        ' branch',
+      autoClose: 10000,
+
+      styles: (theme) => ({
+        root: {
+          boxShadow: theme.shadows.xl,
+        },
+        title: {
+          fontSize: theme.fontSizes.lg,
+          fontWeight: 600,
+          marginBottom: 8,
+        },
+        description: {
+          fontSize: theme.fontSizes.sm,
+          marginBottom: 2,
+          fontWeight: 500,
+        },
+      }),
+    })
   }
 
   return (

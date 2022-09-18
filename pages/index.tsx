@@ -6,11 +6,25 @@ import Banner from 'components/home/Banner'
 import MyComp from 'containers/MyComp'
 import MyFooter from 'layouts/MyFooter'
 import dynamic from 'next/dynamic'
+import requests from 'requests'
+import { useCallback, useEffect, useState } from 'react'
+import { CarCardTypes } from 'types/car.dto'
 
 const CarsSlider = dynamic(() => import('containers/CarsSlider'))
 const Recommended = dynamic(() => import('containers/Recommended'))
 
 const Home: NextPage = () => {
+  const [popularCars, setPopularCars] = useState<CarCardTypes[]>([])
+
+  const fetchPopular = useCallback(async () => {
+    const res = await requests.cars.popular()
+    setPopularCars(res.data)
+  }, [])
+
+  useEffect(() => {
+    fetchPopular()
+  }, [fetchPopular])
+
   return (
     <>
       <MyHeader />
@@ -39,7 +53,11 @@ const Home: NextPage = () => {
               />
             </Grid.Col>
           </Grid>
-          <CarsSlider title='Popular Cars' link='/filter' />
+          <CarsSlider
+            data={popularCars}
+            title='Popular Cars'
+            link='/filter?sort=popular'
+          />
           <Recommended />
         </Stack>
       </MyComp>

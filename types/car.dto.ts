@@ -5,17 +5,14 @@ export interface CarSpecs {
 }
 
 export interface CarCardTypes {
-  id?: string
+  id: number
   slug?: string
   in_wishlist: boolean
   name: string
-  car_type: {
-    key: string
-    name: string
-  }
+  car_type: string
   image: string
   specs: CarSpecs
-  price: string
+  price: number
   discount?: string | null
 }
 
@@ -28,6 +25,19 @@ export interface CarDetails extends Omit<CarCardTypes, 'image'> {
   }
 }
 
+export interface AddCarType {
+  name: string
+  car_type: string
+  description: string
+  images: string
+  price: number | null
+  discount?: number | null
+  specs: {
+    gasoline: number | null
+    steering: 'manual' | 'auto'
+    capacity: number | null
+  }
+}
 // params = car_id
 export interface CarReviews {
   page: number
@@ -60,6 +70,11 @@ export type FilterSortType = 'popular' | 'new' | 'desc' | 'asc'
 export interface CarFilterTypes {
   sort?: { label: FilterSortType; selected: boolean }[]
   capacity?: { label: number; selected: boolean }[]
-  price?: { min?: number; max?: number }
+  price?: {
+    min?: number
+    max?: number
+    selected_min?: number
+    selected_max?: number
+  }
   type?: { label: string; selected: boolean; total: number }[]
 }

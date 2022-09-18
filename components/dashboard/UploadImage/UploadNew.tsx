@@ -10,6 +10,8 @@ import {
   Button,
   createStyles,
   Group,
+  Loader,
+  LoadingOverlay,
   ScrollArea,
   Text,
   useMantineTheme,
@@ -17,39 +19,20 @@ import {
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone'
 import Image from 'next/image'
 import React, { useState } from 'react'
+import useGlobalStyles from 'styles/useGlobalStyles'
+import { UploadImgType } from 'types/default.dt'
+import { upload } from 'utils/upload'
 
-const useStyles = createStyles((theme) => ({
-  preview: {
-    position: 'relative',
-    width: 80,
-    height: 80,
-    borderRadius: theme.radius.md,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor:
-      theme.colorScheme === 'dark'
-        ? theme.colors.gray[7]
-        : theme.colors.gray[4],
-    '.trash-icon': {
-      position: 'absolute',
-      inset: 0,
-      zIndex: 1,
-      display: 'none',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: theme.fn.rgba(theme.black, 0.6),
-    },
-    '&:hover .trash-icon': {
-      display: 'flex',
-    },
-  },
-}))
+interface Props {
+  fetchImages: () => Promise<void>
+  setActiveTab: React.Dispatch<React.SetStateAction<'browse' | 'upload'>>
+}
 
-const UploadNew = () => {
+const UploadNew = ({ fetchImages, setActiveTab }: Props) => {
   const theme = useMantineTheme()
-  const { classes } = useStyles()
+  const { classes } = useGlobalStyles()
   const [uploadedFiles, setFiles] = useState<File[]>([])
+  const [loading, setLoading] = useState(false)
 
   const handleUploads = (files: File[]) => {
     const uniqueOj = [...uploadedFiles, ...files].filter(
@@ -63,8 +46,18 @@ const UploadNew = () => {
   const removeImg = (name: string) =>
     setFiles((prev) => prev.filter((file) => file.name !== name))
 
+  const upload_finish = async () => {
+    setLoading(true)
+    await upload(uploadedFiles)
+    fetchImages()
+    setActiveTab('browse')
+    setFiles([])
+    setLoading(false)
+  }
+
   return (
     <>
+      <LoadingOverlay visible={loading} overlayBlur={2} />
       <Dropzone
         onDrop={handleUploads}
         onReject={(files) => console.log(files)}
@@ -111,8 +104,8 @@ const UploadNew = () => {
             {uploadedFiles.map((file, i) => {
               const link = URL.createObjectURL(file)
               return (
-                <Box key={i} m={0} className={classes.preview}>
-                  <div className='trash-icon'>
+                <Box key={i} m={0} className={classes.imgPreview}>
+                  <div className='inner-icon'>
                     <ActionIcon
                       radius='xl'
                       variant='transparent'
@@ -122,7 +115,7 @@ const UploadNew = () => {
                     </ActionIcon>
                   </div>
                   <Image
-                    src={URL.createObjectURL(file)}
+                    src={link}
                     onLoad={() => URL.revokeObjectURL(link)}
                     width={80}
                     height={80}
@@ -136,7 +129,13 @@ const UploadNew = () => {
         </ScrollArea>
       ) : null}
       <Group mt='md' position='right'>
-        <Button size='md'>Upload</Button>
+        <Button
+          size='md'
+          disabled={!uploadedFiles.length}
+          onClick={upload_finish}
+        >
+          Upload
+        </Button>
       </Group>
     </>
   )

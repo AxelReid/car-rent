@@ -1,4 +1,4 @@
-import { UseFormInput, UseFormReturnType } from '@mantine/form/lib/types'
+import { UseFormReturnType } from '@mantine/form/lib/types'
 import React from 'react'
 
 export interface StepType {
@@ -44,7 +44,17 @@ export interface BitcoinFormType {
 export type PaymentTabValue = 'creditCard' | 'paypal' | 'bitcoin'
 export interface FinalFormType {
   billing: BillingFormType
-  rentalInfo: RentalInfoFormType
-  payment: CreditCardFormType | PaypalFormType | BitcoinFormType
-  paymentType: PaymentTabValue
+  rentalInfo: {
+    carID: number | undefined
+    address_from: string
+    address_to: string
+    date_from: string
+    date_to: string
+    totalPrice: number
+    days: number
+  }
+  paymentMethod:
+    | ({ type: PaymentTabValue } & CreditCardFormType)
+    | PaypalFormType
+    | BitcoinFormType
 }

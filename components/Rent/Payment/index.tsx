@@ -1,3 +1,4 @@
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
 import { Accordion, Box, Card, Group, Radio, Stack, Text } from '@mantine/core'
 import { UseFormReturnType } from '@mantine/form'
 import MyCard from 'components/MyCard'
@@ -74,6 +75,25 @@ const Payment = ({
       {header}
       <form onSubmit={content[form.tab].form?.onSubmit(submit)}>
         <Stack mt='xl' spacing='lg'>
+          <Card
+            radius='md'
+            pl='xl'
+            sx={(theme) => ({
+              background: theme.fn.rgba(theme.colors.red[7], 0.5),
+            })}
+          >
+            <Group position='left' align='center' noWrap>
+              <ExclamationCircleIcon
+                width={30}
+                strokeWidth={1.5}
+                color='white'
+              />
+              <Text size='md' weight={500} color='white'>
+                Do not enter your real card numbers! This is just a test
+                project.
+              </Text>
+            </Group>
+          </Card>
           {panels.map((panel) => (
             <Card
               key={panel.key}

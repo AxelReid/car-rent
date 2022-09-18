@@ -1,12 +1,8 @@
 import {
   ArchiveBoxIcon,
-  CloudArrowUpIcon,
-  CircleStackIcon,
   LightBulbIcon,
   ArrowUpTrayIcon,
   UserIcon,
-  ClipboardDocumentIcon,
-  ClipboardDocumentListIcon,
   DocumentTextIcon,
 } from '@heroicons/react/24/outline'
 import { HomeIcon } from '@heroicons/react/24/solid'
@@ -28,7 +24,7 @@ export const dashboardLinks = [
       {
         label: 'Seller Panel',
         icon: <UserIcon width={24} />,
-        // path: '/dashboard/create',
+        permissions: ['SELLER', 'ADMIN'],
         children: [
           {
             label: 'My rentals',
@@ -38,7 +34,7 @@ export const dashboardLinks = [
           {
             label: 'Create Rental',
             icon: <ArrowUpTrayIcon width={24} />,
-            path: '/dashboard/create',
+            path: '/dashboard/seller/create',
           },
         ],
       },

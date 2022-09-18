@@ -15,7 +15,7 @@ const PayPal = ({ form }: Omit<StepContent<PaypalFormType>, 'header'>) => {
             placeholder='Card number'
             variant='filled'
             {...form.getInputProps('cardNumber')}
-            classNames={{ input: cx(classes.input, classes.input2bg) }}
+            classNames={{ input: cx(classes.input, classes.inputBgDarker) }}
           />
         </Grid.Col>
         <Grid.Col span={12} sm={4} md={12} lg={4}>
@@ -25,7 +25,7 @@ const PayPal = ({ form }: Omit<StepContent<PaypalFormType>, 'header'>) => {
             placeholder='CVC'
             variant='filled'
             {...form.getInputProps('cvc')}
-            classNames={{ input: cx(classes.input, classes.input2bg) }}
+            classNames={{ input: cx(classes.input, classes.inputBgDarker) }}
           />
         </Grid.Col>
       </Grid>

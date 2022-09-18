@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { Grid, Stepper } from '@mantine/core'
 import RentalCar from 'components/Rent/RentalCar'
@@ -7,6 +7,12 @@ import useRentalForms from 'hooks/useRentalForms'
 import MyFooter from 'layouts/MyFooter'
 import MyHeader from 'layouts/MyHeader'
 import { FinalFormType } from 'types/rental.dto'
+import requests from 'requests'
+import { CarDetails } from 'types/car.dto'
+import { useRouter } from 'next/router'
+import { FetchStatus } from 'types/request.dto'
+import { getDifferenceInDays } from 'utils/diffDates'
+import ErrorOverlay from 'components/Rent/ErrorOverlay'
 
 const Billing = dynamic(() => import('components/Rent/Billing'))
 const RentalInfo = dynamic(() => import('components/Rent/RentalInfo'))
@@ -15,15 +21,27 @@ const Confirmation = dynamic(() => import('components/Rent/Confirmation'))
 const BoxTitle = dynamic(() => import('components/Rent/BoxTitle'))
 
 const CarRent = () => {
+  const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
   const { billingForm, rentalForm, payment, confirmation } = useRentalForms()
+  const [car, setCar] = useState<CarDetails | null>(null)
+  const [status, setStatus] = useState<FetchStatus>('loading')
+  const [period, setPeriod] = useState<number | null>(null)
+  const [dates, setDates] = useState({ date_from: '', date_to: '' })
 
   const finalForm: FinalFormType = {
     billing: billingForm.values,
-    rentalInfo: rentalForm.values,
-    payment: payment[payment.tab].values,
-    paymentType: payment.tab,
+    rentalInfo: {
+      carID: car?.id,
+      days: period || 1,
+      totalPrice: Number(Number(car?.price! * period! || 1).toFixed(1)),
+      address_from: rentalForm.values.address_from,
+      address_to: rentalForm.values.address_to,
+      ...dates,
+    },
+    paymentMethod: { type: payment.tab, ...payment[payment.tab].values },
   }
+
   const steps = [
     {
       title: 'Billing Info',
@@ -74,10 +92,50 @@ const CarRent = () => {
     },
   ]
 
+  const fetchCar = async (carSlug: string | string[]) => {
+    try {
+      const res = await requests.cars.details(carSlug)
+      if (res.status === 200) {
+        setCar(res.data)
+        setStatus('ok')
+      } else if (res.status === 404) {
+        setStatus('not-found')
+      } else {
+        setStatus('error')
+      }
+    } catch (error) {
+      setStatus('error')
+    }
+  }
+
+  useEffect(() => {
+    if (router.query?.slug) fetchCar(router.query.slug)
+  }, [router.query?.slug])
+
+  useEffect(() => {
+    const { date_from, date_to, time_from, time_to } = rentalForm.values
+    if (date_from && date_to) {
+      const { diff, from, to } = getDifferenceInDays(
+        date_from,
+        date_to,
+        time_from,
+        time_to
+      )
+      setDates({ date_from: from, date_to: to })
+      setPeriod(diff)
+    } else {
+      setPeriod(null)
+    }
+  }, [rentalForm.values])
+
   return (
     <>
       <MyHeader />
-      <MyComp my={30}>
+      <MyComp py={30}>
+        {status !== 'loading' && status !== 'ok' && (
+          <ErrorOverlay showRefreshBtn={status !== 'error'} />
+        )}
+
         <Stepper
           color='indigo'
           style={{ flex: 1 }}
@@ -103,7 +161,7 @@ const CarRent = () => {
             )}
           </Grid.Col>
           <Grid.Col span={12} md={5.5} lg={4.5}>
-            <RentalCar />
+            <RentalCar car={car} status={status} period={period} />
           </Grid.Col>
         </Grid>
       </MyComp>

@@ -18,7 +18,7 @@ const CreditCard = ({
             placeholder='Card number'
             variant='filled'
             {...form.getInputProps('cardNumber')}
-            classNames={{ input: cx(classes.input, classes.input2bg) }}
+            classNames={{ input: cx(classes.input, classes.inputBgDarker) }}
           />
         </Grid.Col>
         <Grid.Col span={12} sm={6} md={12} lg={6}>
@@ -28,7 +28,7 @@ const CreditCard = ({
             placeholder='DD/MM/YY'
             variant='filled'
             {...form.getInputProps('exp')}
-            classNames={{ input: cx(classes.input, classes.input2bg) }}
+            classNames={{ input: cx(classes.input, classes.inputBgDarker) }}
           />
         </Grid.Col>
         <Grid.Col span={12} sm={6} md={12} lg={6}>
@@ -38,7 +38,7 @@ const CreditCard = ({
             placeholder='Card holder'
             variant='filled'
             {...form.getInputProps('cardHolder')}
-            classNames={{ input: cx(classes.input, classes.input2bg) }}
+            classNames={{ input: cx(classes.input, classes.inputBgDarker) }}
           />
         </Grid.Col>
         <Grid.Col span={12} sm={6} md={12} lg={6}>
@@ -48,7 +48,7 @@ const CreditCard = ({
             variant='filled'
             placeholder='CVC'
             {...form.getInputProps('cvc')}
-            classNames={{ input: cx(classes.input, classes.input2bg) }}
+            classNames={{ input: cx(classes.input, classes.inputBgDarker) }}
           />
         </Grid.Col>
       </Grid>

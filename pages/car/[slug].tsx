@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { Badge, Card, Group, Stack, Title } from '@mantine/core'
+import { Badge, Group, Stack, Title } from '@mantine/core'
 import CarDetail from 'components/Car/CarDetail'
 import Review from 'components/Car/Review'
 import MyComp from 'containers/MyComp'
@@ -10,53 +10,48 @@ import MyHeader from 'layouts/MyHeader'
 import { CarDetails } from 'types/car.dto'
 import requests from 'requests'
 import MyCard from 'components/MyCard'
+import useRecentCars from 'hooks/useRecentCars'
 
 const CarsSlider = dynamic(() => import('containers/CarsSlider'))
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = (await requests.cars.slugs()).map((slug) => ({ params: slug }))
   return {
-    paths: [{ params: { slug: '1' } }],
+    paths,
     fallback: 'blocking',
   }
 }
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const carSlug = params?.slug
   try {
-    const carDetail = await requests.cars.details('bmv')
+    const carDetail = await requests.cars.details(carSlug || '')
+    const status = carDetail.status
+
+    if (status === 200) {
+      return {
+        props: {
+          status,
+          car: carDetail.data,
+        },
+      }
+    }
     return {
       props: {
-        car: carDetail.data?.data,
+        status,
+        car: null,
       },
     }
   } catch (error) {
     return {
       props: {
-        car: {
-          slug: '1',
-          name: 'Rs7 2021',
-          car_type: { key: 'audi', name: 'Audi' },
-          images: [
-            '/imgs/card1car.png',
-            '/imgs/card2car.png',
-            '/imgs/card1bg.svg',
-          ],
-          price: '$80.00',
-          discount: '$95.00',
-          in_wishlist: true,
-          specs: { steering: 'Manual', capacity: '4 People', gasoline: '80L' },
-          description:
-            'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit iusto perferendis ullam ad harum officiis error asperiores repellat omnis velit officia vitae cum, est dolorem rerum, animi iste eveniet! Officiis',
-          rating: {
-            average: 4,
-            total: 97,
-          },
-        },
+        car: null,
+        status: 500,
       },
     }
   }
 }
 
-type Props = { car: CarDetails }
+type Props = { car: CarDetails; status: number }
 
 const reviews = [
   {
@@ -97,28 +92,44 @@ const reviews = [
   },
 ]
 
-const Car = ({ car }: Props) => {
+const Car = ({ car, status }: Props) => {
+  const { recentCars, saveToRecent } = useRecentCars()
+
+  useEffect(() => {
+    if (status === 200) {
+      saveToRecent(car.id, car)
+    }
+  }, [car])
+
   return (
     <>
       <MyHeader />
       <MyComp pt={30} mb='xl'>
         <Stack spacing='xl'>
-          <CarDetail {...car} />
-          <MyCard>
-            <Group>
-              <Title order={3}>Reviews</Title>
-              <Badge size='xl' radius='md' variant='filled'>
-                13
-              </Badge>
-            </Group>
-            <Stack mt='xl' spacing={25}>
-              {reviews.map((review, i) => (
-                <Review key={i} {...review} />
-              ))}
-            </Stack>
-          </MyCard>
-          <CarsSlider title='Recent Cars' />
-          <CarsSlider title='Recomendation Cars' link='/filter' />
+          {status === 200 ? (
+            <>
+              <CarDetail {...car} />
+              <MyCard>
+                <Group>
+                  <Title order={3}>Reviews</Title>
+                  <Badge size='xl' radius='md' variant='filled'>
+                    13
+                  </Badge>
+                </Group>
+                <Stack mt='xl' spacing={25}>
+                  {reviews.map((review, i) => (
+                    <Review key={i} {...review} />
+                  ))}
+                </Stack>
+              </MyCard>
+            </>
+          ) : status === 404 ? (
+            'Not found'
+          ) : (
+            'Something wrong this status code ' + status
+          )}
+          <CarsSlider data={recentCars} title='Recent Cars' />
+          <CarsSlider data={[]} title='Recomendation Cars' link='/filter' />
         </Stack>
       </MyComp>
       <MyFooter />

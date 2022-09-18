@@ -1,6 +1,5 @@
 import { Box, Button, Group, SimpleGrid, Text } from '@mantine/core'
 import React, { memo } from 'react'
-import cars from 'data/cars'
 import CarCard from 'components/Car/CarCard'
 import { CarCardTypes, DataInfo } from 'types/car.dto'
 
@@ -12,7 +11,9 @@ type Props = {
   cars: CarCardTypes[]
 }
 
-const Cars = memo(({ title, loadMore, info, loading }: Props) => {
+const Cars = memo(({ title, loadMore, info, loading, cars }: Props) => {
+  const totalPages = Math.ceil(info.total / info.current)
+
   return (
     <Box>
       {title && (
@@ -36,20 +37,20 @@ const Cars = memo(({ title, loadMore, info, loading }: Props) => {
           { maxWidth: 600, cols: 1, spacing: 'sm' },
         ]}
       >
-        {cars.map((car) => (
-          <CarCard key={car.id} {...car} />
+        {cars.map((car, i) => (
+          <CarCard key={i} {...car} />
         ))}
       </SimpleGrid>
       {typeof loadMore === 'function' && (
         <Group pt={50} position='apart'>
           <div />
-          {info?.total < info?.current && (
+          {info?.total > info?.current && (
             <Button onClick={loadMore} size='md' loading={loading}>
               Show more cars
             </Button>
           )}
           <Text color='dimmed'>
-            {info?.total || 0} Car{info?.total < 1 ? 's' : ''}
+            {info?.current} / {info?.total || 0} Car{info?.total > 1 ? 's' : ''}
           </Text>
         </Group>
       )}

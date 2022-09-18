@@ -13,7 +13,7 @@ const Bitcoin = ({ form }: Omit<StepContent<BitcoinFormType>, 'header'>) => {
       placeholder='Bitcoin address'
       variant='filled'
       {...form.getInputProps('bitcoinAddress')}
-      classNames={{ input: cx(classes.input, classes.input2bg) }}
+      classNames={{ input: cx(classes.input, classes.inputBgDarker) }}
       rightSection={
         <Tooltip
           label='Bitcoin address should be between 25 and 34 char length'

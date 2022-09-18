@@ -1,5 +1,4 @@
-import React, { memo, useCallback, useState } from 'react'
-import { useDidUpdate } from '@mantine/hooks'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { CarCardTypes, DataInfo } from 'types/car.dto'
 import requests from 'requests'
 import Cars from './Cars'
@@ -9,30 +8,24 @@ const Recommended = memo(() => {
   const [info, setInfo] = useState<DataInfo>({ total: 0, current: 0, page: 1 })
   const [loading, setLoading] = useState(false)
 
-  const load = useCallback(
-    async (next: boolean = false) => {
-      setLoading(true)
-      try {
-        const res = await requests.cars.recommended({
-          page: next ? info.page++ : info.page,
-        })
-        const data = res.data
-        setCars((prev) => [...prev, ...data.data])
-        setInfo({ total: data.total, current: data.current, page: data.page })
-        console.log(data)
-      } catch (error: any) {
-        console.error(error.response)
-      }
-      setLoading(false)
-    },
-    [info.page]
-  )
+  const load = async (next: boolean = false) => {
+    setLoading(true)
+    try {
+      const res = await requests.cars.recommended({
+        page: next ? info.page + 1 : info.page,
+      })
+      const data = res.data
 
-  // useShallowEffect(() => {
-  //   load()
-  // }, [])
+      setCars((prev) => (next ? [...prev, ...data.data] : data.data))
+      const page = data.page
+      setInfo({ total: data.total, current: cars.length + data.current, page })
+    } catch (error: any) {
+      console.error(error.response)
+    }
+    setLoading(false)
+  }
 
-  useDidUpdate(() => {
+  useEffect(() => {
     load()
   }, [])
 

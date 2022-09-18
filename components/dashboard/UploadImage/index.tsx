@@ -1,19 +1,42 @@
-import React from 'react'
-import { Box, Divider, Group, Tabs, Text } from '@mantine/core'
-import {
-  ArrowUpTrayIcon,
-  FolderOpenIcon,
-  InboxArrowDownIcon,
-} from '@heroicons/react/24/outline'
+import React, { useEffect, useState } from 'react'
+import { Box, Button, Tabs } from '@mantine/core'
+import { ArrowUpTrayIcon, FolderOpenIcon } from '@heroicons/react/24/outline'
 import Browse from './Browse'
 import UploadNew from './UploadNew'
+import requests from 'requests'
+import { UploadImgType } from 'types/default.dt'
+import { UseFormReturnType } from '@mantine/form'
+import { AddCarFormType } from 'types/admin.dt'
 
-type Props = {}
+interface Props {
+  closeModal: () => void
+  createForm: UseFormReturnType<AddCarFormType>
+}
 
-const UploadImage = (props: Props) => {
+const UploadImage = ({ closeModal, createForm }: Props) => {
+  const [activeTab, setActiveTab] = useState<'browse' | 'upload'>('browse')
+  const [images, setImages] = useState<UploadImgType[] | null>(null)
+
+  const fetchImages = async () => {
+    try {
+      const res = await requests.admin.getImages()
+      setImages(res)
+    } catch (error) {
+      setImages([])
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchImages()
+  }, [])
+
   return (
     <>
-      <Tabs defaultValue='browse'>
+      <Tabs
+        value={activeTab}
+        onTabChange={(val: 'browse' | 'upload') => setActiveTab(val)}
+      >
         <Tabs.List>
           <Tabs.Tab icon={<FolderOpenIcon width={20} />} value='browse'>
             Browse
@@ -25,12 +48,16 @@ const UploadImage = (props: Props) => {
 
         <Tabs.Panel value='browse'>
           <Box mt='lg'>
-            <Browse />
+            <Browse
+              images={images}
+              closeModal={closeModal}
+              createForm={createForm}
+            />
           </Box>
         </Tabs.Panel>
         <Tabs.Panel value='upload'>
           <Box mt='lg'>
-            <UploadNew />
+            <UploadNew setActiveTab={setActiveTab} fetchImages={fetchImages} />
           </Box>
         </Tabs.Panel>
       </Tabs>
