@@ -65,7 +65,6 @@ const CarsSlider = memo(
         <Carousel
           slideSize={304}
           slideGap='xl'
-          loop
           slidesToScroll={mobile ? 1 : 2}
           controlsOffset='xs'
           controlSize={35}
@@ -74,6 +73,7 @@ const CarsSlider = memo(
           plugins={[autoplay.current]}
           onMouseEnter={autoplay.current.stop}
           onMouseLeave={autoplay.current.reset}
+          loop
           breakpoints={[
             { maxWidth: 1100, slideSize: 304, slideGap: 'md' },
             { maxWidth: 800, slideSize: 290, slideGap: 'sm' },
@@ -89,7 +89,7 @@ const CarsSlider = memo(
           }}
         >
           {loading
-            ? emptyArr(4).map((obj) => (
+            ? emptyArr(5).map((obj) => (
                 <Carousel.Slide key={obj.id} size={304}>
                   <LoadingCard />
                 </Carousel.Slide>
