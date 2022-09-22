@@ -8,6 +8,7 @@ const useStyles = createStyles((theme) => ({
       theme.colorScheme === 'dark'
         ? 'rgba(37,38,43,0.7)'
         : 'rgba(255,255,255,0.8)',
+    zIndex: 0,
   },
 }))
 

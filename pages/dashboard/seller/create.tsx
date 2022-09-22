@@ -4,6 +4,7 @@ import {
   EyeIcon,
   TrashIcon,
   XMarkIcon,
+  PlusIcon,
 } from '@heroicons/react/24/outline'
 import {
   ActionIcon,
@@ -28,13 +29,16 @@ import BoxTitle from 'components/Rent/BoxTitle'
 import RichText from 'components/RichText'
 import useAddCarForm from 'hooks/useAddCarForm'
 import { NextPage } from 'next'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import requests from 'requests'
 import useGlobalStyles from 'styles/useGlobalStyles'
 import useInputStyles from 'styles/useInputStyles'
 import { AddCarFormType } from 'types/admin.dt'
 import { AddCarType } from 'types/car.dto'
+
+const AddCarVariation = dynamic(() => import('components/AddCarVariation'))
 
 const Create: NextPage = () => {
   const theme = useMantineTheme()
@@ -44,6 +48,19 @@ const Create: NextPage = () => {
   const { createForm, initialValues } = useAddCarForm()
   const [loading, setLoading] = useState(false)
   const [zoomedImg, setZoomedImg] = useState('')
+  const [carTypeModal, setCarTypeModal] = useState(false)
+  const [carTypes, setCarTypes] = useState<{ value: string; label: string }[]>(
+    []
+  )
+
+  useEffect(() => {
+    getCarTypes()
+  }, [])
+
+  const getCarTypes = async () => {
+    const data = await requests.cars.carTypes()
+    setCarTypes(data)
+  }
 
   const removeImg = (imgID: number) => {
     const imgs = createForm.values.images
@@ -154,13 +171,30 @@ const Create: NextPage = () => {
           priority
         />
       </Modal>
+      <Modal
+        opened={carTypeModal}
+        onClose={() => setCarTypeModal(false)}
+        centered
+        overlayColor={
+          theme.colorScheme === 'dark' ? theme.black : theme.colors.dark[2]
+        }
+        overlayOpacity={0.3}
+        overlayBlur={3}
+        title={
+          <Text className={classes.label} m={0}>
+            Add new car type
+          </Text>
+        }
+      >
+        <AddCarVariation values={carTypes} mutate={getCarTypes} />
+      </Modal>
       <DashboardWrapper>
         <MyCard>
           <BoxTitle title='Create a rental' desc='' />
           <form onSubmit={createForm.onSubmit(submit)}>
             <Stack mt='xl' spacing='md'>
-              <Grid>
-                <Grid.Col span={12} xs={8}>
+              <Grid align='end' grow>
+                <Grid.Col span={12} xs={7}>
                   <TextInput
                     size='md'
                     label={<Text className={classes.label}>Name</Text>}
@@ -170,18 +204,25 @@ const Create: NextPage = () => {
                     {...createForm.getInputProps('name')}
                   />
                 </Grid.Col>
-                <Grid.Col span={12} xs={4}>
+                <Grid.Col span={12} xs={4} sx={{ position: 'relative' }}>
+                  <div style={{ position: 'absolute', right: 10, top: 7 }}>
+                    <ActionIcon
+                      className={classes.inputBg}
+                      variant='light'
+                      radius={5}
+                      p={4}
+                      onClick={() => setCarTypeModal(true)}
+                    >
+                      <PlusIcon width={20} />
+                    </ActionIcon>
+                  </div>
                   <Select
                     size='md'
                     label={<Text className={classes.label}>Car type</Text>}
                     placeholder='Car type'
                     variant='filled'
                     classNames={{ input: classes.input }}
-                    data={[
-                      { value: 'sport', label: 'Sport' },
-                      { value: 'truck', label: 'Truck' },
-                      { value: 'moto', label: 'Moto' },
-                    ]}
+                    data={carTypes}
                     {...createForm.getInputProps('car_type')}
                   />
                 </Grid.Col>

@@ -15,7 +15,7 @@ type Props = {
 }
 
 const Cars = memo(
-  ({ initLoading, title, loadMore, info, loading, cars }: Props) => {
+  ({ initLoading = false, title, loadMore, info, loading, cars }: Props) => {
     if (!initLoading && cars.length < 1) return null
     return (
       <Box>
@@ -40,7 +40,7 @@ const Cars = memo(
             { maxWidth: 600, cols: 1, spacing: 'sm' },
           ]}
         >
-          {loading
+          {initLoading
             ? emptyArr(10).map((obj) => <LoadingCard key={obj.id} />)
             : cars.map((car, i) => <CarCard key={i} {...car} />)}
         </SimpleGrid>

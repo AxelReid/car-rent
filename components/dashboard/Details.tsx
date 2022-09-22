@@ -39,7 +39,6 @@ const useStyles = createStyles((theme) => ({
 
 const Details = (props: Props) => {
   const { classes } = useGlobalStyles()
-  const { classes: cls } = useStyles()
 
   const Info = ({ title }: InfoType) => (
     <div>
