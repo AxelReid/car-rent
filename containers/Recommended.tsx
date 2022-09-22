@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { CarCardTypes, DataInfo } from 'types/car.dto'
 import requests from 'requests'
 import Cars from './Cars'
@@ -7,7 +7,7 @@ const Recommended = memo(() => {
   const [cars, setCars] = useState<CarCardTypes[]>([])
   const [info, setInfo] = useState<DataInfo>({ total: 0, current: 0, page: 1 })
   const [loading, setLoading] = useState(false)
-  const [initLoading, setInitLoading] = useState(true)
+  const [initLoading, setInitLoading] = useState(false)
 
   const load = async (next: boolean = false) => {
     setLoading(true)
@@ -27,6 +27,7 @@ const Recommended = memo(() => {
   }
 
   useEffect(() => {
+    setInitLoading(true)
     load()
     setInitLoading(false)
   }, [])

@@ -15,9 +15,10 @@ const Recommended = dynamic(() => import('containers/Recommended'))
 
 const Home: NextPage = () => {
   const [popularCars, setPopularCars] = useState<CarCardTypes[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const fetchPopular = useCallback(async () => {
+    setLoading(true)
     const res = await requests.cars.popular()
     setPopularCars(res.data)
     setLoading(false)
