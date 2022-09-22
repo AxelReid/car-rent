@@ -129,7 +129,7 @@ const Car = ({ car, status }: Props) => {
             'Something wrong this status code ' + status
           )}
           <CarsSlider data={recentCars} title='Recent Cars' />
-          <CarsSlider data={[]} title='Recomendation Cars' link='/filter' />
+          {/* <CarsSlider loading={} data={[]} title='Recomendation Cars' link='/filter' /> */}
         </Stack>
       </MyComp>
       <MyFooter />

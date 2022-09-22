@@ -1,6 +1,6 @@
 import { useLocalStorage } from '@mantine/hooks'
 import { useCallback } from 'react'
-import { CarCardTypes, CarDetails } from 'types/car.dto'
+import { CarCardTypes } from 'types/car.dto'
 
 export default function useRecentCars() {
   const [recentCars, setRecentCars] = useLocalStorage<CarCardTypes[]>({
@@ -16,13 +16,16 @@ export default function useRecentCars() {
 
   const saveToRecent = useCallback(
     (carId: number, car: any) => {
-      const isExist = recentCars.findIndex((car) => car.id === carId) !== -1
-      if (!isExist) {
-        car.image = car?.images?.length ? car.images[0] : ''
-        setRecentCars([car, ...recentCars])
-      }
+      setRecentCars((prev) => {
+        const isExist = prev.findIndex((car) => car.id === carId) !== -1
+        if (!isExist) {
+          car.image = car?.images?.length ? car.images[0] : ''
+          return [car, ...prev.slice(0, 4)]
+        }
+        return prev
+      })
     },
-    [recentCars, setRecentCars]
+    [setRecentCars]
   )
 
   return { recentCars, saveToRecent }
