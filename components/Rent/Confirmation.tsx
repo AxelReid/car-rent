@@ -14,7 +14,6 @@ import React from 'react'
 import useGlobalStyles from 'styles/useGlobalStyles'
 import { FinalFormType, NextPrevBtnProps, StepContent } from 'types/rental.dto'
 import BoxTitle from './BoxTitle'
-import { CheckIcon } from '@heroicons/react/24/outline'
 
 interface StateType {
   newsLetter: boolean

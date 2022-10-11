@@ -8,9 +8,7 @@ import {
   ActionIcon,
   Box,
   Button,
-  createStyles,
   Group,
-  Loader,
   LoadingOverlay,
   ScrollArea,
   Text,
@@ -20,7 +18,6 @@ import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import useGlobalStyles from 'styles/useGlobalStyles'
-import { UploadImgType } from 'types/default.dt'
 import { upload } from 'utils/upload'
 
 interface Props {

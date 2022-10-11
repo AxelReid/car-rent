@@ -62,44 +62,59 @@ const CarsSlider = memo(
             </Link>
           )}
         </Group>
-        <Carousel
-          slideSize={304}
-          slideGap='xl'
-          slidesToScroll={mobile ? 1 : 2}
-          controlsOffset='xs'
-          controlSize={35}
-          align='start'
-          classNames={classes}
-          plugins={[autoplay.current]}
-          onMouseEnter={autoplay.current.stop}
-          onMouseLeave={autoplay.current.reset}
-          loop
-          breakpoints={[
-            { maxWidth: 1100, slideSize: 304, slideGap: 'md' },
-            { maxWidth: 800, slideSize: 290, slideGap: 'sm' },
-            { maxWidth: 600, slideSize: 290, slideGap: 'sm' },
-          ]}
-          styles={{
-            control: {
-              '&[data-inactive]': {
-                opacity: 0,
-                cursor: 'default',
+        {loading ? (
+          <Carousel
+            align='start'
+            slideSize={304}
+            slideGap='xl'
+            slidesToScroll={mobile ? 1 : 2}
+            loop
+            breakpoints={[
+              { maxWidth: 1100, slideSize: 304, slideGap: 'md' },
+              { maxWidth: 800, slideSize: 290, slideGap: 'sm' },
+              { maxWidth: 600, slideSize: 290, slideGap: 'sm' },
+            ]}
+          >
+            {emptyArr(5).map((obj) => (
+              <Carousel.Slide key={obj.id} size={304}>
+                <LoadingCard />
+              </Carousel.Slide>
+            ))}
+          </Carousel>
+        ) : (
+          <Carousel
+            slideSize={304}
+            slideGap='xl'
+            slidesToScroll={mobile ? 1 : 2}
+            controlsOffset='xs'
+            controlSize={35}
+            align='start'
+            classNames={classes}
+            plugins={[autoplay.current]}
+            onMouseEnter={autoplay.current.stop}
+            onMouseLeave={autoplay.current.reset}
+            loop
+            breakpoints={[
+              { maxWidth: 1100, slideSize: 304, slideGap: 'md' },
+              { maxWidth: 800, slideSize: 290, slideGap: 'sm' },
+              { maxWidth: 600, slideSize: 290, slideGap: 'sm' },
+            ]}
+            styles={{
+              control: {
+                '&[data-inactive]': {
+                  opacity: 0,
+                  cursor: 'default',
+                },
               },
-            },
-          }}
-        >
-          {loading
-            ? emptyArr(5).map((obj) => (
-                <Carousel.Slide key={obj.id} size={304}>
-                  <LoadingCard />
-                </Carousel.Slide>
-              ))
-            : data.map((car) => (
-                <Carousel.Slide key={car?.id} size={304}>
-                  <CarCard {...car} />
-                </Carousel.Slide>
-              ))}
-        </Carousel>
+            }}
+          >
+            {data.map((car) => (
+              <Carousel.Slide key={car?.id} size={304}>
+                <CarCard {...car} />
+              </Carousel.Slide>
+            ))}
+          </Carousel>
+        )}
       </Box>
     )
   }
