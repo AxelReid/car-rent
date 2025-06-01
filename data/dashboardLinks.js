@@ -4,55 +4,55 @@ import {
   ArrowUpTrayIcon,
   UserIcon,
   DocumentTextIcon,
-} from '@heroicons/react/24/outline'
-import { HomeIcon } from '@heroicons/react/24/solid'
+} from "@heroicons/react/24/outline";
+import { HomeIcon } from "@heroicons/react/24/solid";
 
 export const dashboardLinks = [
   {
-    label: 'main menu',
+    label: "main menu",
     links: [
       {
-        label: 'Home',
+        label: "Home",
         icon: <HomeIcon width={24} />,
-        path: '/dashboard',
+        path: "/dashboard",
       },
       {
-        label: 'Car Rent',
+        label: "Car Rent",
         icon: <ArchiveBoxIcon width={24} />,
-        path: '/dashboard/rents',
+        //path: "/dashboard/rents",
       },
       {
-        label: 'Seller Panel',
+        label: "Seller Panel",
         icon: <UserIcon width={24} />,
-        permissions: ['SELLER', 'ADMIN'],
+        permissions: ["SELLER", "ADMIN"],
         children: [
           {
-            label: 'My rentals',
+            label: "My rentals",
             icon: <DocumentTextIcon width={24} />,
-            path: '/dashboard/my-rents',
+            //path: "/dashboard/my-rents",
           },
           {
-            label: 'Create Rental',
+            label: "Create Rental",
             icon: <ArrowUpTrayIcon width={24} />,
-            path: '/dashboard/seller/create',
+            path: "/dashboard/seller/create",
           },
         ],
       },
     ],
   },
   {
-    label: 'preferences',
+    label: "preferences",
     links: [
       {
-        label: 'Setting',
+        label: "Setting",
         icon: <LightBulbIcon width={24} />,
-        path: '/dashboard/setting',
+        //path: "/dashboard/setting",
       },
       {
-        label: 'Help Center',
+        label: "Help Center",
         icon: <LightBulbIcon width={24} />,
-        path: '/dashboard/rents',
+        //path: "/dashboard/rents",
       },
     ],
   },
-]
+];

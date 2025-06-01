@@ -55,44 +55,29 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 type Props = { car: CarDetails; status: number };
 
-const reviews = [
-  {
-    user: {
-      avatar:
-        "https://i.scdn.co/image/ab6761610000e5eb0ff4f1b8113d77f33b4db58f",
-      bio: "Reviewer",
-      name: "Raad Muhammad Al Kurdi",
-    },
-    date: "12 July 2022",
-    rating: 3,
+const generateReview = () => {
+  const date = new Date();
+  date.setDate(date.getDate() - Math.floor(Math.random() * 30));
+  const dateLabel = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
+  });
+
+  return {
+    date: dateLabel,
+    rating: Math.round(Math.random() * 5),
     content:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore asperiores quis eaque accusantium nostrum facere minus dolor sunt quo consequuntur officia corporis aspernatur necessitatibus ullam doloremque labore est voluptate, iste quibusdam iure beatae voluptatum non? Dolor explicabo nemo excepturi eos autem facere ab animi dolores.",
-  },
-  {
+      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore asperiores quis eaque accusantium nostrum facere minus dolor",
     user: {
-      avatar:
-        "https://i.scdn.co/image/ab6761610000e5eb0ff4f1b8113d77f33b4db58f",
-      bio: "Qari, Sheikh",
-      name: "Raad Muhammad Al Kurdi",
+      name: "Mahmoud",
+      bio: "Reviwer",
+      avatar: "",
     },
-    date: "12 July 2022",
-    rating: 5,
-    content:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore asperiores quis eaque accusantium nostrum facere minus dolor sunt quo consequuntur officia corporis aspernatur necessitatibus ullam doloremque labore est voluptate, iste quibusdam iure beatae voluptatum non? Dolor explicabo nemo excepturi eos autem facere ab animi dolores.",
-  },
-  {
-    user: {
-      avatar:
-        "https://i.scdn.co/image/ab6761610000e5eb0ff4f1b8113d77f33b4db58f",
-      bio: "Qari, Sheikh",
-      name: "Raad Muhammad Al Kurdi",
-    },
-    date: "12 July 2022",
-    rating: 2,
-    content:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore asperiores quis eaque accusantium nostrum facere minus dolor sunt quo consequuntur officia corporis aspernatur necessitatibus ullam doloremque labore est voluptate, iste quibusdam iure beatae voluptatum non? Dolor explicabo nemo excepturi eos autem facere ab animi dolores.",
-  },
-];
+  };
+};
+
+const reviews = Array.from({ length: 4 }, () => generateReview());
 
 const Car = ({ car, status }: Props) => {
   const { recentCars, saveToRecent } = useRecentCars();

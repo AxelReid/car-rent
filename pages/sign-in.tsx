@@ -116,7 +116,7 @@ const SignIn = () => {
     <Center sx={{ height: "100vh" }} px="md">
       <Card radius="md" p="xl" withBorder shadow="md" style={{ width: 370 }}>
         <Text size="lg" weight={500} mb="xl">
-          Welcome to Morent
+          Welcome to Carrent
         </Text>
 
         <form onSubmit={form.onSubmit((vals) => submit(vals, undefined))}>

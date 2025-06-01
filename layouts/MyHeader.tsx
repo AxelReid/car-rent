@@ -70,7 +70,7 @@ const MyHeader = memo(
                     size={32}
                     color="indigo"
                   >
-                    Morent
+                    Carrent
                   </Text>
                 </Link>
                 <Input
