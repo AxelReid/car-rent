@@ -1,32 +1,32 @@
-import { useLocalStorage } from '@mantine/hooks'
-import { useCallback } from 'react'
-import { CarCardTypes } from 'types/car.dto'
+import { useLocalStorage } from "@mantine/hooks";
+import { useCallback } from "react";
+import { CarCardTypes } from "types/car.dto";
 
 export default function useRecentCars() {
   const [recentCars, setRecentCars] = useLocalStorage<CarCardTypes[]>({
-    key: 'recent-cars',
+    key: "recent-cars",
     defaultValue: [],
     serialize: (value) => {
-      return JSON.stringify(value)
+      return JSON.stringify(value);
     },
     deserialize(value) {
-      return JSON.parse(value || '[]')
+      return JSON.parse(value || "[]");
     },
-  })
+  });
 
   const saveToRecent = useCallback(
-    (carId: number, car: any) => {
+    (carId: string, car: any) => {
       setRecentCars((prev) => {
-        const isExist = prev.findIndex((car) => car.id === carId) !== -1
+        const isExist = prev.findIndex((car) => car.id === carId) !== -1;
         if (!isExist) {
-          car.image = car?.images?.length ? car.images[0] : ''
-          return [car, ...prev.slice(0, 4)]
+          car.image = car?.images?.length ? car.images[0] : "";
+          return [car, ...prev.slice(0, 4)];
         }
-        return prev
-      })
+        return prev;
+      });
     },
-    [setRecentCars]
-  )
+    [setRecentCars],
+  );
 
-  return { recentCars, saveToRecent }
+  return { recentCars, saveToRecent };
 }

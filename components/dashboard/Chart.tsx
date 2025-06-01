@@ -8,36 +8,36 @@ import {
   Text,
   Title,
   useMantineTheme,
-} from '@mantine/core'
-import React from 'react'
-import useGlobalStyles from 'styles/useGlobalStyles'
+} from "@mantine/core";
+import React from "react";
+import useGlobalStyles from "styles/useGlobalStyles";
 
-type Props = {}
+type Props = {};
 
 const data = [
-  { label: 'Sport Car', value: 17.439 },
-  { label: 'SUV', value: 9.478 },
-  { label: 'Coupe', value: 18.197 },
-  { label: 'Hatchback', value: 12.51 },
-  { label: 'MPV', value: 14.406 },
-]
+  { label: "Sport Car", value: 17.439 },
+  { label: "SUV", value: 9.478 },
+  { label: "Coupe", value: 18.197 },
+  { label: "Hatchback", value: 12.51 },
+  { label: "MPV", value: 14.406 },
+];
 
 const Chart = (props: Props) => {
-  const theme = useMantineTheme()
-  const { classes } = useGlobalStyles()
+  const theme = useMantineTheme();
+  const { classes } = useGlobalStyles();
 
   return (
-    <Group position='center' align='center' spacing='lg'>
+    <Group position="center" align="center" spacing="lg">
       <RingProgress
         size={260}
         thickness={22}
         roundCaps
         label={
           <Box>
-            <Text size={28} weight='bold' align='center'>
+            <Text size={28} weight="bold" align="center">
               72,030
             </Text>
-            <Text size='xs' align='center' color='dimmed'>
+            <Text size="xs" align="center" color="dimmed">
               Rental Cars
             </Text>
           </Box>
@@ -49,21 +49,21 @@ const Chart = (props: Props) => {
       />
       <Stack sx={{ flex: 1 }}>
         {data.map((item, i) => (
-          <Group key={i} position='apart' align='center' noWrap spacing='lg'>
-            <Group align='center' noWrap>
+          <Group key={i} position="apart" align="center" noWrap spacing="lg">
+            <Group align="center" noWrap>
               <ColorSwatch size={12} color={theme.colors.blue[9 - i * 1]} />
-              <Text size='md' weight={600} className={classes.secondary_color}>
+              <Text size="md" weight={600} className={classes.secondary_color}>
                 {item.label}
               </Text>
             </Group>
-            <Text size='sm' weight={500}>
+            <Text size="sm" weight={500}>
               {item.value}
             </Text>
           </Group>
         ))}
       </Stack>
     </Group>
-  )
-}
+  );
+};
 
-export default Chart
+export default Chart;

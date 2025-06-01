@@ -1,91 +1,93 @@
-import React, { Suspense, useCallback, useEffect, useState } from 'react'
-import { GetServerSideProps } from 'next'
-import dynamic from 'next/dynamic'
-import { Box, Button, Grid, Group, Text } from '@mantine/core'
-import MyComp from 'containers/MyComp'
-import MyFooter from 'layouts/MyFooter'
-import MyHeader from 'layouts/MyHeader'
-import useGlobalStyles from 'styles/useGlobalStyles'
-import FilterPanel from 'components/FilterPanel'
-import requests from 'requests'
-import { FilterResData } from 'types/request.dto'
-import { useRouter } from 'next/router'
-import { useCounter } from '@mantine/hooks'
+import React, { Suspense, useCallback, useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
+import dynamic from "next/dynamic";
+import { Box, Button, Grid, Group, Text } from "@mantine/core";
+import MyComp from "containers/MyComp";
+import MyFooter from "layouts/MyFooter";
+import MyHeader from "layouts/MyHeader";
+import useGlobalStyles from "styles/useGlobalStyles";
+import FilterPanel from "components/FilterPanel";
+import requests from "requests";
+import { FilterResData } from "types/request.dto";
+import { useRouter } from "next/router";
+import { useCounter } from "@mantine/hooks";
 
-const CarCard = dynamic(() => import('components/Car/CarCard'))
+const CarCard = dynamic(() => import("components/Car/CarCard"));
 
 interface Props {
-  data: FilterResData
-  error: boolean
+  data: FilterResData;
+  error: boolean;
 }
 
 const Filter = ({ data, error }: Props) => {
-  const router = useRouter()
-  const { pathname, query } = router
-  const { classes } = useGlobalStyles()
-  const [opened, setOpened] = useState(false)
-  const [count, handleCount] = useCounter(1)
-  const [loading, setLoading] = useState(false)
-  const [cars, setCars] = useState(data.data || [])
+  const router = useRouter();
+  const { pathname, query } = router;
+  const { classes } = useGlobalStyles();
+  const [opened, setOpened] = useState(false);
+  const [page, handlePage] = useCounter(1);
+  const [loading, setLoading] = useState(false);
+  const [cars, setCars] = useState(data.data || []);
   const [currentTotal, setCurrentTotal] = useState({
     current: data.current,
     total: data.total,
-  })
+  });
 
   const initialize = useCallback(() => {
-    setCurrentTotal({ current: data.current, total: data.total })
-    setCars(data.data)
-  }, [query])
+    setCurrentTotal({ current: data.current, total: data.total });
+    setCars(data.data);
+    handlePage.reset();
+  }, [query]);
 
-  useEffect(() => initialize(), [query])
+  useEffect(() => initialize(), [query]);
 
   const applyFilter = useCallback(
     (val: any, type: string) => {
-      let newQuery = { ...query }
+      let newQuery = { ...query };
 
-      if (type === 'type' || type === 'capacity' || type === 'page') {
-        let VAL = String(val.val)
-        let value = newQuery[type] ? String(newQuery[type]).split(',') : ['1']
+      if (type === "type" || type === "capacity" || type === "page") {
+        let VAL = String(val.val);
+        let value = newQuery[type] ? String(newQuery[type]).split(",") : [];
 
         if (newQuery[type] === VAL || (!val.insert && !newQuery[type]))
-          delete newQuery[type]
+          delete newQuery[type];
         else if (!val.insert)
-          newQuery[type] = value.filter((v: string) => v !== VAL).join(',')
-        else newQuery[type] = [...value, VAL].join(',')
-      } else if (type === 'price') {
-        newQuery.min = val[0]
-        newQuery.max = val[1]
+          newQuery[type] = value.filter((v: string) => v !== VAL).join(",");
+        else newQuery[type] = [...value, VAL].join(",");
+      } else if (type === "price") {
+        newQuery.min = val[0];
+        newQuery.max = val[1];
       } else {
-        newQuery[type] = val
+        newQuery[type] = val;
       }
 
       router.push({
         pathname,
         query: newQuery,
-      })
+      });
     },
-    [query]
-  )
+    [query],
+  );
 
   const fetchMore = async () => {
-    setLoading(true)
+    setLoading(true);
     // TODO:
     // get the next individual page and push it to the previous ones
-    let pages = '1'
-    for (let i = 2; i <= count + 1; i++) pages += ',' + i
-    handleCount.increment()
-    const res = await requests.cars.filter({ ...query, page: pages })
-    setCurrentTotal({ current: res.current, total: res.total })
-    setCars(res.data)
-    setLoading(false)
-  }
+    handlePage.increment();
+    const res = await requests.cars.filter({ ...query, page: page + 1 });
+    setCurrentTotal((prev) => ({
+      current: prev.current + res.current,
+      total: res.total,
+    }));
+    setCars((prev) => [...prev, ...res.data]);
+    setLoading(false);
+  };
 
   return (
     <>
       <MyHeader sticky opened={opened} toggleOpen={setOpened} />
       <Box className={classes.bgCover}>
         <MyComp p={0}>
-          <Group spacing={0} align='stretch' noWrap>
+          <Group spacing={0} align="stretch" noWrap>
             <FilterPanel
               applyFilter={applyFilter}
               dataExist={!error || !!data.total}
@@ -93,9 +95,9 @@ const Filter = ({ data, error }: Props) => {
               opened={opened}
               toggleOpen={setOpened}
             />
-            <Box p='xl' className={classes.bgBody} style={{ flex: 1 }}>
+            <Box p="xl" className={classes.bgBody} style={{ flex: 1 }}>
               {error ? (
-                'something went wrong'
+                "something went wrong"
               ) : cars.length ? (
                 <Grid>
                   <Suspense>
@@ -115,26 +117,26 @@ const Filter = ({ data, error }: Props) => {
                   </Suspense>
                 </Grid>
               ) : (
-                'no data'
+                "no data"
               )}
               {currentTotal.current ? (
-                <Group pt={50} position='apart'>
+                <Group pt={50} position="apart">
                   <div />
                   {currentTotal.current < currentTotal.total && (
                     <Button
-                      size='md'
+                      size="md"
                       onClick={() => fetchMore()}
                       loading={loading}
                     >
                       Show more cars
                     </Button>
                   )}
-                  <Text color='dimmed'>
+                  <Text color="dimmed">
                     {currentTotal.current >= currentTotal.total
-                      ? ''
-                      : currentTotal.current + ' /'}{' '}
+                      ? ""
+                      : currentTotal.current + " /"}{" "}
                     {currentTotal.total} car
-                    {currentTotal.current > 1 ? 's' : ''}
+                    {currentTotal.current > 1 ? "s" : ""}
                   </Text>
                 </Group>
               ) : null}
@@ -144,20 +146,21 @@ const Filter = ({ data, error }: Props) => {
       </Box>
       <MyFooter />
     </>
-  )
-}
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   try {
-    const data = await requests.cars.filter({ ...query })
+    const data = await requests.cars.filter({ ...query });
+
     return {
       props: { data, error: false },
-    }
+    };
   } catch (error) {
     return {
       props: { data: {}, error: true },
-    }
+    };
   }
-}
+};
 
-export default Filter
+export default Filter;

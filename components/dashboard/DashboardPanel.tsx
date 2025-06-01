@@ -1,30 +1,33 @@
-import { ActionIcon, Box, NavLink, Stack, Text } from '@mantine/core'
-import MyNavbar from 'layouts/MyNavbar'
-import React, { memo } from 'react'
-import { dashboardLinks } from 'data/dashboardLinks'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import useGlobalStyles from 'styles/useGlobalStyles'
-import { ArrowLeftOnRectangleIcon as LogoutIcon } from '@heroicons/react/24/outline'
-import { Permission_types, SidebarToggleType } from 'types/default.dt'
-import requests from 'requests'
-import guard from 'utils/guard'
+import { ActionIcon, Box, NavLink, Stack, Text } from "@mantine/core";
+import MyNavbar from "layouts/MyNavbar";
+import React, { memo } from "react";
+import { dashboardLinks } from "data/dashboardLinks";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import useGlobalStyles from "styles/useGlobalStyles";
+import { ArrowLeftOnRectangleIcon as LogoutIcon } from "@heroicons/react/24/outline";
+import { Permission_types, SidebarToggleType } from "types/default.dt";
+//import requests from "requests";
+import guard from "utils/guard";
+import { deleteCookie } from "cookies-next";
 
 interface MenuType {
-  label: string
-  icon: JSX.Element
-  path?: string
-  permissions?: Permission_types[] | string[]
-  children?: MenuType[]
+  label: string;
+  icon: JSX.Element;
+  path?: string;
+  permissions?: Permission_types[] | string[];
+  children?: MenuType[];
 }
 
 const DashboardPanel = memo(({ opened, toggleOpen }: SidebarToggleType) => {
-  const router = useRouter()
-  const { classes } = useGlobalStyles()
+  const router = useRouter();
+  const { classes } = useGlobalStyles();
 
   const logout = async () => {
-    await requests.auth.logout()
-  }
+    //await requests.auth.logout();
+    deleteCookie("token");
+    router.push("/");
+  };
 
   const Items = ({ items }: { items: MenuType[] }) => {
     return (
@@ -35,8 +38,8 @@ const DashboardPanel = memo(({ opened, toggleOpen }: SidebarToggleType) => {
             <Item key={i} item={item} />
           ))}
       </Stack>
-    )
-  }
+    );
+  };
 
   const Item = ({ item }: { item: MenuType }) => {
     const menuItem = (
@@ -44,30 +47,30 @@ const DashboardPanel = memo(({ opened, toggleOpen }: SidebarToggleType) => {
         defaultOpened={
           item?.children
             ? item.children.findIndex(
-                ({ path }) => path === router.pathname
+                ({ path }) => path === router.pathname,
               ) !== -1
               ? true
               : false
             : false
         }
-        variant='filled'
-        component='a'
+        variant="filled"
+        component="a"
         active={item?.path === router.pathname}
-        py='sm'
+        py="sm"
         sx={(theme) => ({
           borderRadius: theme.radius.md,
         })}
         label={
           <Text
-            transform='capitalize'
-            size='lg'
+            transform="capitalize"
+            size="lg"
             className={classes.secondary_color}
             sx={(theme) => {
-              const active = router.pathname === item?.path
+              const active = router.pathname === item?.path;
               return {
-                color: active ? theme.white : '',
+                color: active ? theme.white : "",
                 fontWeight: active ? 600 : 500,
-              }
+              };
             }}
           >
             {item.label}
@@ -75,10 +78,10 @@ const DashboardPanel = memo(({ opened, toggleOpen }: SidebarToggleType) => {
         }
         icon={
           <ActionIcon
-            variant='transparent'
+            variant="transparent"
             className={classes.secondary_color}
             sx={(theme) => ({
-              color: item?.path === router.pathname ? theme.white : '',
+              color: item?.path === router.pathname ? theme.white : "",
             })}
           >
             {item?.icon}
@@ -87,16 +90,16 @@ const DashboardPanel = memo(({ opened, toggleOpen }: SidebarToggleType) => {
       >
         {item?.children && <Items items={item.children} />}
       </NavLink>
-    )
+    );
 
     if (item?.path)
       return (
         <Link href={item.path} passHref>
           {menuItem}
         </Link>
-      )
-    return menuItem
-  }
+      );
+    return menuItem;
+  };
 
   return (
     <MyNavbar
@@ -105,8 +108,8 @@ const DashboardPanel = memo(({ opened, toggleOpen }: SidebarToggleType) => {
       toggleOpen={toggleOpen}
       bottomSection={
         <NavLink
-          py='sm'
-          px='md'
+          py="sm"
+          px="md"
           sx={(theme) => ({
             borderRadius: theme.radius.md,
           })}
@@ -114,8 +117,8 @@ const DashboardPanel = memo(({ opened, toggleOpen }: SidebarToggleType) => {
           onClick={logout}
           label={
             <Text
-              transform='capitalize'
-              size='lg'
+              transform="capitalize"
+              size="lg"
               weight={500}
               className={classes.secondary_color}
             >
@@ -128,17 +131,17 @@ const DashboardPanel = memo(({ opened, toggleOpen }: SidebarToggleType) => {
       <Stack spacing={40}>
         {dashboardLinks.map((item) => (
           <Box key={item.label}>
-            <Text color='dimmed' size='xs' transform='uppercase'>
+            <Text color="dimmed" size="xs" transform="uppercase">
               {item.label}
             </Text>
-            <Stack spacing={3} mt='md'>
+            <Stack spacing={3} mt="md">
               <Items items={item.links} />
             </Stack>
           </Box>
         ))}
       </Stack>
     </MyNavbar>
-  )
-})
-DashboardPanel.displayName = 'DashboardPanel'
-export default DashboardPanel
+  );
+});
+DashboardPanel.displayName = "DashboardPanel";
+export default DashboardPanel;
